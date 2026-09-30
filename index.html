@@ -102,6 +102,8 @@
           <option value="math">গণিত (Maths)</option>
           <option value="science">বিজ্ঞান (Science)</option>
           <option value="polity">সংবিধান (Polity)</option>
+          <option value="english">ইংরেজি(English)</option>
+          <option value="others">অন্যান্য(Others)</option>
         </select>
         <select id="newTopic" onchange="toggleCustomTopicInput()"></select>
         <input type="text" id="customTopicName" placeholder="নতুন অধ্যায়ের নাম লিখুন" style="display:none;">
@@ -129,6 +131,8 @@
         <button class="tab-pill" onclick="setSubject('math', this)">গণিত</button>
         <button class="tab-pill" onclick="setSubject('science', this)">বিজ্ঞান</button>
         <button class="tab-pill" onclick="setSubject('polity', this)">সংবিধান</button>
+        <button class="tab-pill" onclick="setSubject('english', this)">English</button>
+       <button class="tab-pill" onclick="setSubject('others', this)">Others</button> 
       </div>
 
       <span class="filter-label" id="topicLabel" style="display:none;">উপ-শাখা (Sub-topics)</span>
@@ -168,6 +172,16 @@
         { id: 'medieval', name: 'Medieval History' },
         { id: 'modern', name: 'Modern History' }
       ],
+      english: [
+        { id: 'grammer', name: 'eng granmer' },
+        { id: 'vocab', name: 'eng vocab' },
+        { id: 'compreh', name: 'eng compreh' }
+        ],
+      others: [
+        { id: 'static', name: 'static gk' },
+        { id: 'economy', name: 'indian economy' },
+        { id: 'bengali', name: 'bengali descrivtive' }
+        ],
       geography: [
         { id: 'physical_geo', name: 'Physical Geo' },
         { id: 'indian_geo', name: 'Indian Geo' },
@@ -432,22 +446,4 @@
         authBox.innerHTML = `<button class="btn-admin-gate" onclick="openLoginModal()">🔒 Admin Panel</button>`;
         adminPanel.style.display = 'none';
       }
-      renderCards();
-    }
-
-    function handleAdminLogout() {
-      isAdminLoggedIn = false;
-      sessionStorage.removeItem('roy_admin_session');
-      updateAdminUI();
-      alert("অ্যাডমিন সেশন সমাপ্ত হয়েছে।");
-    }
-
-    function checkAdminSession() {
-      if (sessionStorage.getItem('roy_admin_session') === 'active') {
-        isAdminLoggedIn = true;
-      }
-      updateAdminUI();
-    }
-  </script>
-</body>
-</html>
+      
