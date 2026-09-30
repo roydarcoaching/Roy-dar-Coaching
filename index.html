@@ -3,182 +3,286 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roy dar Coaching - স্মার্ট স্টাডি পোর্টাল</title>
+  <title>Roy dar Coaching - ডায়নামিক এডু-পোর্টাল</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
-    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
-    body { background-color: #f1f5f9; color: #1e293b; padding-bottom: 70px; }
+    :root {
+      --primary: #4338ca;
+      --primary-dark: #312e81;
+      --primary-light: #e0e7ff;
+      --accent: #f59e0b;
+      --dark: #0f172a;
+      --light-bg: #f8fafc;
+      --text-muted: #64748b;
+    }
 
-    /* হেডার ও নেভিগেশন */
-    header { background: linear-gradient(135deg, #1e1b4b, #3730a3); color: white; padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-    .brand h1 { font-size: 20px; font-weight: 700; }
-    .brand p { font-size: 11px; opacity: 0.8; }
-    .auth-btn-box { display: flex; align-items: center; gap: 10px; }
-    .btn-login { background: #4f46e5; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; }
-    .user-tag { background: rgba(255,255,255,0.15); padding: 5px 10px; border-radius: 6px; font-size: 12px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif; }
+    body { background-color: var(--light-bg); color: var(--dark); padding-bottom: 80px; }
 
-    .container { max-width: 1100px; margin: 20px auto; padding: 0 15px; }
+    /* টপবার */
+    header {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+      color: white;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
 
-    /* অ্যাডমিন কন্ট্রোল প্যানেল */
-    .admin-panel { background: #ffffff; border: 2px dashed #4f46e5; border-radius: 12px; padding: 20px; margin-bottom: 25px; display: none; }
-    .admin-title { font-size: 16px; font-weight: bold; color: #3730a3; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-    .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 12px; }
-    .admin-grid input, .admin-grid select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; outline: none; }
-    .btn-add { background: #16a34a; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
-    .btn-add:hover { background: #15803d; }
+    .brand-box { display: flex; align-items: center; gap: 12px; }
+    .brand-logo-wrap {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: white;
+      overflow: hidden;
+      border: 2px solid #fbbf24;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .brand-logo-wrap img { width: 100%; height: 100%; object-fit: cover; }
+    .brand-title h1 { font-size: 19px; font-weight: 800; line-height: 1.2; }
+    .brand-title p { font-size: 11px; color: #cbd5e1; }
+
+    .btn-auth {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .container { max-width: 1150px; margin: 20px auto; padding: 0 14px; }
+
+    /* অ্যাডমিন ড্যাশবোর্ড */
+    .master-admin-panel {
+      background: white;
+      border: 2px solid #6366f1;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.1);
+      display: none;
+    }
+    .admin-tab-btns { display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; flex-wrap: wrap; }
+    .adm-tab { padding: 8px 14px; background: #f1f5f9; border: none; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; color: #475569; }
+    .adm-tab.active { background: var(--primary); color: white; }
+
+    .admin-sub-section { display: none; }
+    .admin-sub-section.active { display: block; }
+
+    .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 12px; }
+    .form-row input, .form-row select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; background: #fdfdfd; }
+    .btn-action { background: #16a34a; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; }
 
     /* ফিল্টার সেকশন */
-    .filter-card { background: white; padding: 18px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); margin-bottom: 25px; }
-    .filter-label { font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 8px; display: block; }
+    .filter-card { background: white; padding: 16px; border-radius: 14px; margin-bottom: 20px; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+    .filter-title { font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; display: block; }
     
-    .exam-tabs { display: flex; gap: 10px; margin-bottom: 15px; }
-    .exam-btn { flex: 1; padding: 9px; border: 2px solid #e2e8f0; background: #f8fafc; border-radius: 8px; font-weight: bold; cursor: pointer; color: #475569; text-align: center; font-size: 13px; }
-    .exam-btn.active { border-color: #4338ca; background: #e0e7ff; color: #312e81; }
+    .exam-toggles { display: flex; gap: 8px; margin-bottom: 14px; }
+    .exam-btn { flex: 1; padding: 8px; border: 1.5px solid #e2e8f0; background: #f8fafc; border-radius: 8px; font-size: 12.5px; font-weight: 700; cursor: pointer; color: #475569; text-align: center; }
+    .exam-btn.active { background: var(--primary-light); border-color: var(--primary); color: var(--primary-dark); }
 
-    .scroll-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 12px; scrollbar-width: none; }
+    .scroll-row { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 10px; scrollbar-width: none; }
     .scroll-row::-webkit-scrollbar { display: none; }
-    .tab-pill { white-space: nowrap; padding: 6px 14px; border: 1px solid #cbd5e1; background: white; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; color: #334155; }
-    .tab-pill.active { background: #4338ca; color: white; border-color: #4338ca; }
+    .pill { white-space: nowrap; padding: 6px 14px; border: 1px solid #cbd5e1; background: white; border-radius: 20px; font-size: 12.5px; font-weight: 600; cursor: pointer; color: #334155; }
+    .pill.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-    .search-box { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; margin-top: 5px; }
+    .search-bar { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13.5px; outline: none; margin-top: 4px; }
 
     /* ক্লাস গ্রিড */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 20px; }
-    .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 3px 8px rgba(0,0,0,0.06); display: flex; flex-direction: column; }
+    .classes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 18px; }
+    .class-card { background: white; border-radius: 12px; overflow: hidden; border: 1px solid #f1f5f9; box-shadow: 0 3px 10px rgba(0,0,0,0.04); display: flex; flex-direction: column; }
     .video-wrap { position: relative; padding-bottom: 56.25%; height: 0; background: #000; }
-    .video-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+    .video-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
-    .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-    .tags { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
-    .tag { font-size: 10px; font-weight: bold; padding: 3px 6px; border-radius: 4px; text-transform: uppercase; }
-    .tag-exam { background: #fee2e2; color: #991b1b; }
-    .tag-sub { background: #e0e7ff; color: #3730a3; }
-    .tag-topic { background: #fef3c7; color: #92400e; }
+    .card-info { padding: 14px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .badge-line { display: flex; gap: 5px; margin-bottom: 8px; flex-wrap: wrap; }
+    .badge-tag { font-size: 10px; font-weight: 800; padding: 3px 6px; border-radius: 4px; }
+    .b-exam { background: #fee2e2; color: #991b1b; }
+    .b-sub { background: #e0e7ff; color: #3730a3; }
 
-    .card-title { font-size: 15px; font-weight: 700; line-height: 1.4; margin-bottom: 12px; color: #0f172a; }
-    .action-row { display: flex; gap: 8px; }
-    .btn-pdf { flex: 1; text-align: center; padding: 8px; background: #f8fafc; color: #4338ca; border: 1px solid #cbd5e1; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 600; }
-    .btn-delete { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; display: none; }
+    .class-title { font-size: 14.5px; font-weight: 700; line-height: 1.4; margin-bottom: 12px; color: var(--dark); }
+    .action-row { display: flex; gap: 6px; }
+    .btn-pdf { flex: 1; text-align: center; padding: 8px; background: #f8fafc; color: var(--primary); border: 1px solid var(--primary-light); border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 700; }
+    .btn-delete { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; }
 
-    /* মোডাল */
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
-    .modal-box { background: white; padding: 25px; border-radius: 12px; width: 100%; max-width: 380px; }
-    .modal-box h3 { font-size: 18px; margin-bottom: 12px; }
-    .modal-box input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; margin-bottom: 12px; outline: none; }
+    /* লগইন মোডাল */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 9999;
+    }
+    .modal-box {
+      background: white;
+      padding: 24px;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .modal-box h3 { font-size: 18px; margin-bottom: 14px; font-weight: 800; }
+    .modal-box input { width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; margin-bottom: 12px; outline: none; font-size: 14px; }
   </style>
 </head>
 <body>
 
   <!-- হেডার -->
   <header>
-    <div class="brand">
-      <h1>Roy dar Coaching</h1>
-      <p>ডিজিটাল লার্নিং ও স্মার্ট স্টাডি পোর্টাল</p>
+    <div class="brand-box">
+      <div class="brand-logo-wrap">
+        <img src="logo.png" alt="Logo" id="siteLogo">
+      </div>
+      <div class="brand-title">
+        <h1>Roy dar Coaching</h1>
+        <p>Govt. Exam Prep • ডিজিটাল স্টাডি পোর্টাল</p>
+      </div>
     </div>
-    <div class="auth-btn-box" id="authBox">
-      <button class="btn-login" onclick="openLoginModal()">লগইন করুন</button>
+    <div id="authContainer">
+      <button type="button" class="btn-auth" id="loginBtnTrigger" onclick="openLoginModal()">
+        <i class="fa-solid fa-lock"></i> অ্যাডমিন লগইন
+      </button>
     </div>
   </header>
 
   <div class="container">
 
-    <!-- অ্যাডমিন প্যানেল (শুধুমাত্র Roydarcoaching@gmail.com দিয়ে লগইন করলে দৃশ্যমান হবে) -->
-    <div class="admin-panel" id="adminPanel">
-      <div class="admin-title">⚡ অ্যাডমিন কন্ট্রোল: নতুন চ্যাপ্টার ও ক্লাস আপলোড</div>
-      <div class="admin-grid">
-        <select id="newExam">
-          <option value="oneday">One Day Exams</option>
-          <option value="civil">Civil Services (WBCS)</option>
-          <option value="oneday civil">Both (One Day & Civil)</option>
-        </select>
-        <select id="newSub" onchange="syncAdminTopics()">
-          <option value="history">ইতিহাস (History)</option>
-          <option value="geography">ভূগোল (Geography)</option>
-          <option value="math">গণিত (Maths)</option>
-          <option value="science">বিজ্ঞান (Science)</option>
-          <option value="polity">সংবিধান (Polity)</option>
-        </select>
-        <select id="newTopic"></select>
-        <input type="text" id="newTitle" placeholder="চ্যাপ্টার / ক্লাসের নাম">
-        <input type="text" id="newVideoId" placeholder="YouTube Video ID (उदा. dQw4w9WgXcQ)">
-        <input type="text" id="newPdfUrl" placeholder="Google Drive PDF লিংক">
+    <!-- অ্যাডমিন ড্যাশবোর্ড -->
+    <div class="master-admin-panel" id="masterAdminPanel">
+      <div class="admin-tab-btns">
+        <button class="adm-tab active" onclick="switchAdminTab('classesTab', this)"><i class="fa-solid fa-video"></i> ক্লাস আপলোড</button>
+        <button class="adm-tab" onclick="switchAdminTab('subjectTab', this)"><i class="fa-solid fa-folder-plus"></i> নতুন সাবজেক্ট তৈরি</button>
+        <button class="adm-tab" onclick="switchAdminTab('topicTab', this)"><i class="fa-solid fa-layer-group"></i> নতুন সাব-টপিক যোগ</button>
+        <button class="adm-tab" onclick="switchAdminTab('brandingTab', this)"><i class="fa-solid fa-image"></i> লোগো পরিবর্তন</button>
       </div>
-      <button class="btn-add" onclick="addNewClass()">+ ক্লাসেস যোগ করুন</button>
+
+      <!-- ক্লাস আপলোড -->
+      <div class="admin-sub-section active" id="classesTab">
+        <div class="form-row">
+          <select id="uploadExam">
+            <option value="oneday">One Day Exams</option>
+            <option value="civil">Civil Services</option>
+            <option value="oneday civil">Both Exams</option>
+          </select>
+          <select id="uploadSub" onchange="syncUploadSubTopics()"></select>
+          <select id="uploadTopic"></select>
+          <input type="text" id="uploadTitle" placeholder="ক্লাসের অধ্যায়ের নাম">
+          <input type="text" id="uploadVideo" placeholder="YouTube Video ID বা পুরো লিংক">
+          <input type="text" id="uploadPdf" placeholder="Google Drive PDF লিংক">
+        </div>
+        <button class="btn-action" id="btnUpload" onclick="submitNewClass()">+ ক্লাসটি পোর্টালে যুক্ত করুন</button>
+      </div>
+
+      <!-- নতুন সাবজেক্ট তৈরি -->
+      <div class="admin-sub-section" id="subjectTab">
+        <p style="font-size: 13px; color: #64748b; margin-bottom: 8px;">যেকোনো নতুন সাবজেক্ট (যেমন: Bengali, Computer ইত্যাদি) যোগ করুন:</p>
+        <div class="form-row">
+          <input type="text" id="newSubjectKey" placeholder="সাবজেক্ট আইডি (उदा. computer)">
+          <input type="text" id="newSubjectName" placeholder="সাবজেক্টের নাম (उदा. কম্পিউটার)">
+        </div>
+        <button class="btn-action" onclick="createNewSubject()">+ সাবজেক্ট সেভ করুন</button>
+      </div>
+
+      <!-- নতুন সাব-টপিক যোগ -->
+      <div class="admin-sub-section" id="topicTab">
+        <div class="form-row">
+          <select id="targetSubForTopic"></select>
+          <input type="text" id="newTopicKey" placeholder="টপিক আইডি (उदा. ms_word)">
+          <input type="text" id="newTopicName" placeholder="টপিকের নাম (उदा. MS Word)">
+        </div>
+        <button class="btn-action" onclick="createNewTopic()">+ সাব-টপিক যোগ করুন</button>
+      </div>
+
+      <!-- লোগো পরিবর্তন -->
+      <div class="admin-sub-section" id="brandingTab">
+        <p style="font-size: 13px; color: #64748b; margin-bottom: 8px;">আপনার যেকোনো ফটোর অনলাইন লিংক বা ড্রাইভের লিংক দিন:</p>
+        <div class="form-row">
+          <input type="text" id="newLogoUrl" placeholder="ইমেজ লিংক (https://.../my_logo.png)">
+        </div>
+        <button class="btn-action" onclick="updateLogoUrl()"><i class="fa-solid fa-floppy-disk"></i> লোগো আপডেট করুন</button>
+      </div>
     </div>
 
     <!-- ফিল্টারিং সেকশন -->
     <div class="filter-card">
-      <span class="filter-label">কোর্স ক্যাটাগরি</span>
-      <div class="exam-tabs">
-        <button class="exam-btn active" onclick="setExam('all', this)">সব এক্সাম</button>
-        <button class="exam-btn" onclick="setExam('oneday', this)">One Day Exams</button>
-        <button class="exam-btn" onclick="setExam('civil', this)">Civil Services</button>
+      <span class="filter-title">কোর্স ক্যাটাগরি</span>
+      <div class="exam-toggles">
+        <button class="exam-btn active" onclick="setExamMode('all', this)">সব এক্সাম</button>
+        <button class="exam-btn" onclick="setExamMode('oneday', this)">One Day Exams</button>
+        <button class="exam-btn" onclick="setExamMode('civil', this)">Civil Services</button>
       </div>
 
-      <span class="filter-label">বিষয় নির্বাচন করুন</span>
-      <div class="scroll-row" id="subTabs">
-        <button class="tab-pill active" onclick="setSubject('all', this)">সব বিষয়</button>
-        <button class="tab-pill" onclick="setSubject('history', this)">ইতিহাস</button>
-        <button class="tab-pill" onclick="setSubject('geography', this)">ভূগোল</button>
-        <button class="tab-pill" onclick="setSubject('math', this)">গণিত</button>
-        <button class="tab-pill" onclick="setSubject('science', this)">বিজ্ঞান</button>
-        <button class="tab-pill" onclick="setSubject('polity', this)">সংবিধান</button>
-      </div>
+      <span class="filter-title">বিষয় নির্বাচন করুন</span>
+      <div class="scroll-row" id="publicSubjectBar"></div>
 
-      <span class="filter-label" id="topicLabel" style="display:none;">উপ-শাখা (Sub-topics)</span>
-      <div class="scroll-row" id="topicContainer"></div>
+      <span class="filter-title" id="topicHeading" style="display:none;">উপ-শাখা (Sub-Topics)</span>
+      <div class="scroll-row" id="publicTopicBar"></div>
 
-      <input type="text" id="searchInput" class="search-box" placeholder="যেকোনো চ্যাপ্টারের নাম সার্চ করুন..." onkeyup="renderCards()">
+      <input type="text" id="searchField" class="search-bar" placeholder="🔍 যেকোনো ক্লাসের নাম দিয়ে সরাসরি খুঁজুন..." onkeyup="renderClassGrid()">
     </div>
 
-    <!-- ক্লাস গ্রিড -->
-    <div class="grid" id="classGrid"></div>
+    <!-- ক্লাসের গ্রিড -->
+    <div class="classes-grid" id="publicClassesGrid"></div>
+
   </div>
 
-  <!-- লগইন মোডাল -->
-  <div class="modal" id="loginModal">
+  <!-- লগইন মোডাল বক্স -->
+  <div class="modal-overlay" id="authModal">
     <div class="modal-box">
-      <h3>অ্যাকাউন্টে লগইন করুন</h3>
-      <input type="email" id="userEmail" placeholder="আপনার Gmail দিন">
-      <input type="password" id="userPass" placeholder="পাসওয়ার্ড">
-      <button class="btn-login" style="width: 100%; margin-bottom: 8px;" onclick="handleLogin()">লগইন</button>
-      <button class="tab-pill" style="width: 100%;" onclick="closeLoginModal()">বাতিল</button>
+      <h3>অ্যাডমিন সাইন-ইন</h3>
+      <input type="email" id="loginEmail" placeholder="roydarcoaching@gmail.com">
+      <input type="password" id="loginPass" placeholder="পাসওয়ার্ড দিন (12345)">
+      <button class="btn-action" style="width: 100%; margin-bottom: 8px;" onclick="verifyAdminLogin()">লগইন করুন</button>
+      <button class="pill" style="width: 100%; border-radius: 6px; padding: 9px;" onclick="closeLoginModal()">বাতিল</button>
     </div>
   </div>
 
   <script>
-    // নির্দিষ্ট অ্যাডমিন ইমেইল
-    const ADMIN_EMAIL = "roydarcoaching@gmail.com";
-    let currentUser = null;
+    // মোডাল ওপেন/ক্লোজ (সবার আগে রাখা হলো যাতে টাচ করলেই কাজ করে)
+    function openLoginModal() {
+      document.getElementById("authModal").style.display = 'flex';
+    }
+    function closeLoginModal() {
+      document.getElementById("authModal").style.display = 'none';
+    }
 
-    // বিষয় ও উপ-শাখা ডাটাবেস
-    const topicDictionary = {
-      history: [
-        { id: 'ancient', name: 'Ancient History' },
-        { id: 'medieval', name: 'Medieval History' },
-        { id: 'modern', name: 'Modern History' }
-      ],
-      geography: [
-        { id: 'physical_geo', name: 'Physical Geo' },
-        { id: 'indian_geo', name: 'Indian Geo' },
-        { id: 'wb_geo', name: 'WB Geography' }
-      ],
-      math: [
-        { id: 'arithmetic', name: 'পাটিগণিত (Arithmetic)' },
-        { id: 'algebra', name: 'বীজগণিত (Algebra)' },
-        { id: 'advanced', name: 'অ্যাডভান্সড গণিত' }
-      ],
-      science: [
-        { id: 'physics', name: 'ভৌত বিজ্ঞান (Physics)' },
-        { id: 'biology', name: 'জীবন বিজ্ঞান (Biology)' },
-        { id: 'chemistry', name: 'রসায়ন (Chemistry)' }
-      ],
-      polity: [
-        { id: 'constitution', name: 'সংবিধান ও ধারা' }
-      ]
+    // অ্যাডমিন আইডি ও পাসওয়ার্ড
+    const MASTER_ADMIN_EMAIL = "roydarcoaching@gmail.com";
+    const MASTER_ADMIN_PASS = "12345"; // সহজ পাসওয়ার্ড দেওয়া হলো
+
+    let isAdmin = false;
+
+    // ডিফল্ট সাবজেক্ট ও ক্লাস ডেটা
+    let subjectsData = JSON.parse(localStorage.getItem('roy_subjects')) || {
+      history: { name: 'ইতিহাস', topics: [ { id: 'ancient', name: 'Ancient India' }, { id: 'medieval', name: 'Medieval India' }, { id: 'modern', name: 'Modern India' }, { id: 'inm', name: 'জাতীয় আন্দোলন' } ] },
+      geography: { name: 'ভূগোল', topics: [ { id: 'wb_geo', name: 'West Bengal Geography' }, { id: 'indian_geo', name: 'Indian Geography' }, { id: 'physical_geo', name: 'Physical Geo' } ] },
+      polity: { name: 'সংবিধান', topics: [ { id: 'constitution', name: 'সংবিধান ও ধারা' }, { id: 'governance', name: 'শাসনব্যবস্থা' } ] },
+      math: { name: 'গণিত', topics: [ { id: 'arithmetic', name: 'পাটিগণিত' }, { id: 'algebra', name: 'বীজগণিত' }, { id: 'geometry', name: 'জ্যামিতি ও পরিমিতি' } ] },
+      science: { name: 'বিজ্ঞান', topics: [ { id: 'biology', name: 'জীববিজ্ঞান' }, { id: 'physics', name: 'পদার্থবিজ্ঞান' }, { id: 'chemistry', name: 'রসায়ন' } ] },
+      static_gk: { name: 'স্ট্যাটিক জিকে', topics: [ { id: 'art_culture', name: 'শিল্প ও সংস্কৃতি' }, { id: 'first_india', name: 'ভারতের প্রথম' }, { id: 'hq_org', name: 'সদর দপ্তর' } ] }
     };
 
-    // ডিফল্ট ডেমো ক্লাসেস (LocalStorage-এ সংরক্ষিত হবে)
-    const initialClasses = [
+    let siteClasses = JSON.parse(localStorage.getItem('roy_classes')) || [
       {
         id: '1',
         exam: 'oneday civil',
@@ -186,114 +290,105 @@
         topic: 'ancient',
         title: 'সিন্ধু সভ্যতা ও নগর পরিকল্পনা (Indus Valley)',
         videoId: 'M7lc1UVf-VE',
-        pdfUrl: 'https://drive.google.com'
-      },
-      {
-        id: '2',
-        exam: 'civil',
-        sub: 'geography',
-        topic: 'wb_geo',
-        title: 'পশ্চিমবঙ্গের ভূপ্রকৃতি ও নদনদী বিশদ পর্যালোচনা',
-        videoId: 'M7lc1UVf-VE',
-        pdfUrl: 'https://drive.google.com'
+        pdfUrl: '#'
       }
     ];
 
-    let classesData = JSON.parse(localStorage.getItem('roy_classes')) || initialClasses;
+    let activeFilter = { exam: 'all', sub: 'all', topic: 'all' };
 
-    let filterState = {
-      exam: 'all',
-      sub: 'all',
-      topic: 'all',
-      search: ''
-    };
-
-    // ইনিশিয়ালাইজেশন
     window.onload = function() {
-      syncAdminTopics();
-      renderCards();
-      checkSavedUser();
+      // সেভ করা লোগো থাকলে বসানো
+      const savedLogo = localStorage.getItem('roy_custom_logo');
+      if (savedLogo) {
+        document.getElementById("siteLogo").src = savedLogo;
+      }
+
+      buildSubjectUI();
+      syncAdminSubjectSelects();
+      checkExistingSession();
+      renderClassGrid();
     };
 
-    function syncAdminTopics() {
-      const sub = document.getElementById('newSub').value;
-      const topicSelect = document.getElementById('newTopic');
-      topicSelect.innerHTML = '';
-      if (topicDictionary[sub]) {
-        topicDictionary[sub].forEach(t => {
-          topicSelect.innerHTML += `<option value="${t.id}">${t.name}</option>`;
-        });
+    function buildSubjectUI() {
+      const subBar = document.getElementById("publicSubjectBar");
+      let html = `<button class="pill ${activeFilter.sub === 'all' ? 'active' : ''}" onclick="filterBySubject('all', this)">সব বিষয়</button>`;
+      for (let key in subjectsData) {
+        html += `<button class="pill ${activeFilter.sub === key ? 'active' : ''}" onclick="filterBySubject('${key}', this)">${subjectsData[key].name}</button>`;
       }
+      subBar.innerHTML = html;
     }
 
-    // ফিল্টারিং ফাংশনসমূহ
-    function setExam(exam, el) {
-      document.querySelectorAll('.exam-btn').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
-      filterState.exam = exam;
-      renderCards();
-    }
+    function filterBySubject(subKey, btn) {
+      document.querySelectorAll('#publicSubjectBar .pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter.sub = subKey;
+      activeFilter.topic = 'all';
 
-    function setSubject(sub, el) {
-      document.querySelectorAll('#subTabs .tab-pill').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
-      filterState.sub = sub;
-      filterState.topic = 'all';
+      const topicHeading = document.getElementById("topicHeading");
+      const topicBar = document.getElementById("publicTopicBar");
+      topicBar.innerHTML = '';
 
-      const topicContainer = document.getElementById('topicContainer');
-      const topicLabel = document.getElementById('topicLabel');
-      topicContainer.innerHTML = '';
-
-      if (sub === 'all' || !topicDictionary[sub]) {
-        topicLabel.style.display = 'none';
+      if (subKey === 'all' || !subjectsData[subKey] || !subjectsData[subKey].topics) {
+        topicHeading.style.display = 'none';
       } else {
-        topicLabel.style.display = 'block';
-        let html = `<button class="tab-pill active" onclick="setTopic('all', this)">সব অধ্যায়</button>`;
-        topicDictionary[sub].forEach(t => {
-          html += `<button class="tab-pill" onclick="setTopic('${t.id}', this)">${t.name}</button>`;
+        topicHeading.style.display = 'block';
+        let html = `<button class="pill active" onclick="filterByTopic('all', this)">সব অধ্যায়</button>`;
+        subjectsData[subKey].topics.forEach(t => {
+          html += `<button class="pill" onclick="filterByTopic('${t.id}', this)">${t.name}</button>`;
         });
-        topicContainer.innerHTML = html;
+        topicBar.innerHTML = html;
       }
-      renderCards();
+      renderClassGrid();
     }
 
-    function setTopic(topic, el) {
-      document.querySelectorAll('#topicContainer .tab-pill').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
-      filterState.topic = topic;
-      renderCards();
+    function filterByTopic(topicId, btn) {
+      document.querySelectorAll('#publicTopicBar .pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter.topic = topicId;
+      renderClassGrid();
     }
 
-    // কার্ড রেন্ডারিং
-    function renderCards() {
-      const searchTxt = document.getElementById('searchInput').value.toLowerCase();
-      const grid = document.getElementById('classGrid');
+    function setExamMode(mode, btn) {
+      document.querySelectorAll('.exam-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter.exam = mode;
+      renderClassGrid();
+    }
+
+    function renderClassGrid() {
+      const q = document.getElementById("searchField").value.toLowerCase();
+      const grid = document.getElementById("publicClassesGrid");
       grid.innerHTML = '';
 
-      const isAdmin = currentUser === ADMIN_EMAIL;
+      if (siteClasses.length === 0) {
+        grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 40px;">কোনো ক্লাস পাওয়া যায়নি।</p>';
+        return;
+      }
 
-      classesData.forEach(item => {
-        const matchExam = (filterState.exam === 'all' || item.exam.includes(filterState.exam));
-        const matchSub = (filterState.sub === 'all' || item.sub === filterState.sub);
-        const matchTopic = (filterState.topic === 'all' || item.topic === filterState.topic);
-        const matchSearch = item.title.toLowerCase().includes(searchTxt);
+      siteClasses.forEach(c => {
+        const matchExam = (activeFilter.exam === 'all' || c.exam.includes(activeFilter.exam));
+        const matchSub = (activeFilter.sub === 'all' || c.sub === activeFilter.sub);
+        const matchTopic = (activeFilter.topic === 'all' || c.topic === activeFilter.topic);
+        const matchTitle = c.title.toLowerCase().includes(q);
 
-        if (matchExam && matchSub && matchTopic && matchSearch) {
+        if (matchExam && matchSub && matchTopic && matchTitle) {
+          const subName = subjectsData[c.sub] ? subjectsData[c.sub].name : c.sub;
           grid.innerHTML += `
-            <div class="card">
+            <div class="class-card">
               <div class="video-wrap">
-                <iframe src="https://www.youtube.com/embed/${item.videoId}" frameborder="0" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/${c.videoId}" allowfullscreen></iframe>
               </div>
-              <div class="card-content">
-                <div class="tags">
-                  <span class="tag tag-exam">${item.exam}</span>
-                  <span class="tag tag-sub">${item.sub}</span>
-                  <span class="tag tag-topic">${item.topic}</span>
+              <div class="card-info">
+                <div>
+                  <div class="badge-line">
+                    <span class="badge-tag b-exam">${c.exam}</span>
+                    <span class="badge-tag b-sub">${subName}</span>
+                  </div>
+                  <h3 class="class-title">${c.title}</h3>
                 </div>
-                <h3 class="card-title">${item.title}</h3>
                 <div class="action-row">
-                  <a href="${item.pdfUrl}" target="_blank" class="btn-pdf">📥 PDF নোটস</a>
-                  ${isAdmin ? `<button class="btn-delete" style="display:block" onclick="deleteClass('${item.id}')">মুছুন</button>` : ''}
+                  <a href="${c.pdfUrl}" target="_blank" class="btn-pdf"><i class="fa-solid fa-file-pdf"></i> PDF নোটস</a>
+                  ${isAdmin ? `<button class="btn-delete" onclick="deleteClassDoc('${c.id}')"><i class="fa-solid fa-trash"></i></button>` : ''}
                 </div>
               </div>
             </div>
@@ -302,101 +397,48 @@
       });
     }
 
-    // অ্যাডমিন দ্বারা নতুন ক্লাস যোগ
-    function addNewClass() {
-      const title = document.getElementById('newTitle').value.trim();
-      const videoId = document.getElementById('newVideoId').value.trim();
-      const pdfUrl = document.getElementById('newPdfUrl').value.trim();
+    function submitNewClass() {
+      const title = document.getElementById("uploadTitle").value.trim();
+      let rawVideo = document.getElementById("uploadVideo").value.trim();
+      const pdf = document.getElementById("uploadPdf").value.trim();
 
-      if (!title || !videoId) {
-        alert("দয়া করে ক্লাসের নাম ও ইউটিউব ভিডিও আইডি দিন!");
+      if (!title || !rawVideo) {
+        alert("দয়া করে ক্লাসের নাম ও ভিডিও আইডি/লিংক দিন!");
         return;
       }
+
+      let videoId = rawVideo;
+      if (rawVideo.includes("v=")) videoId = rawVideo.split("v=")[1].split("&")[0];
+      else if (rawVideo.includes("youtu.be/")) videoId = rawVideo.split("youtu.be/")[1].split("?")[0];
 
       const newEntry = {
         id: Date.now().toString(),
-        exam: document.getElementById('newExam').value,
-        sub: document.getElementById('newSub').value,
-        topic: document.getElementById('newTopic').value,
+        exam: document.getElementById("uploadExam").value,
+        sub: document.getElementById("uploadSub").value,
+        topic: document.getElementById("uploadTopic").value,
         title: title,
         videoId: videoId,
-        pdfUrl: pdfUrl || '#'
+        pdfUrl: pdf || '#'
       };
 
-      classesData.unshift(newEntry);
-      localStorage.setItem('roy_classes', JSON.stringify(classesData));
+      siteClasses.unshift(newEntry);
+      localStorage.setItem('roy_classes', JSON.stringify(siteClasses));
 
-      // ফিল্ড ক্লিয়ার করা
-      document.getElementById('newTitle').value = '';
-      document.getElementById('newVideoId').value = '';
-      document.getElementById('newPdfUrl').value = '';
+      document.getElementById("uploadTitle").value = '';
+      document.getElementById("uploadVideo").value = '';
+      document.getElementById("uploadPdf").value = '';
 
-      alert("ক্লাসটি সফলভাবে লাইভ যোগ করা হয়েছে!");
-      renderCards();
+      alert("ক্লাসটি সফলভাবে যোগ হয়েছে!");
+      renderClassGrid();
     }
 
-    function deleteClass(id) {
-      if (confirm("আপনি কি নিশ্চিত এই ক্লাসটি মুছে ফেলতে চান?")) {
-        classesData = classesData.filter(item => item.id !== id);
-        localStorage.setItem('roy_classes', JSON.stringify(classesData));
-        renderCards();
+    function deleteClassDoc(id) {
+      if (confirm("ক্লাসটি মুছে ফেলতে চান?")) {
+        siteClasses = siteClasses.filter(c => c.id !== id);
+        localStorage.setItem('roy_classes', JSON.stringify(siteClasses));
+        renderClassGrid();
       }
     }
 
-    // লগইন সিস্টেম
-    function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
-    function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
-
-    function handleLogin() {
-      const email = document.getElementById('userEmail').value.trim().toLowerCase();
-      if (!email) {
-        alert("দয়া করে আপনার জিমেইল আইডি দিন!");
-        return;
-      }
-
-      currentUser = email;
-      localStorage.setItem('roy_user', currentUser);
-      closeLoginModal();
-      applyUserRole();
-    }
-
-    function applyUserRole() {
-      const authBox = document.getElementById('authBox');
-      const adminPanel = document.getElementById('adminPanel');
-
-      if (currentUser) {
-        const isAdmin = (currentUser === ADMIN_EMAIL);
-        authBox.innerHTML = `
-          <span class="user-tag">${isAdmin ? '👑 অ্যাডমিন' : '🎓 স্টুডেন্ট'}: ${currentUser}</span>
-          <button class="btn-login" style="background:#dc2626;" onclick="handleLogout()">লগআউট</button>
-        `;
-
-        if (isAdmin) {
-          adminPanel.style.display = 'block';
-        } else {
-          adminPanel.style.display = 'none';
-        }
-      } else {
-        authBox.innerHTML = `<button class="btn-login" onclick="openLoginModal()">লগইন করুন</button>`;
-        adminPanel.style.display = 'none';
-      }
-      renderCards();
-    }
-
-    function handleLogout() {
-      currentUser = null;
-      localStorage.removeItem('roy_user');
-      applyUserRole();
-    }
-
-    function checkSavedUser() {
-      const saved = localStorage.getItem('roy_user');
-      if (saved) {
-        currentUser = saved;
-        applyUserRole();
-      }
-    }
-  </script>
-</body>
-</html>
-
+    function createNewSubject() {
+      const key = document.getElementByI
