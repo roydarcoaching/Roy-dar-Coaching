@@ -103,7 +103,7 @@
           <option value="science">বিজ্ঞান (Science)</option>
           <option value="polity">সংবিধান (Polity)</option>
           <option value="english">ইংরেজি(English)</option>
-          <option value="others">অন্যান্য(Others)</option>
+          <option value="others">অন্যান্য(Other)</option>
         </select>
         <select id="newTopic" onchange="toggleCustomTopicInput()"></select>
         <input type="text" id="customTopicName" placeholder="নতুন অধ্যায়ের নাম লিখুন" style="display:none;">
@@ -132,7 +132,7 @@
         <button class="tab-pill" onclick="setSubject('science', this)">বিজ্ঞান</button>
         <button class="tab-pill" onclick="setSubject('polity', this)">সংবিধান</button>
         <button class="tab-pill" onclick="setSubject('english', this)">English</button>
-       <button class="tab-pill" onclick="setSubject('others', this)">Others</button> 
+       <button class="tab-pill" onclick="setSubject('others', this)">Othe</button> 
       </div>
 
       <span class="filter-label" id="topicLabel" style="display:none;">উপ-শাখা (Sub-topics)</span>
@@ -446,4 +446,4 @@
         authBox.innerHTML = `<button class="btn-admin-gate" onclick="openLoginModal()">🔒 Admin Panel</button>`;
         adminPanel.style.display = 'none';
       }
-      
+   
