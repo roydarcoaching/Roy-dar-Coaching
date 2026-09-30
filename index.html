@@ -18,7 +18,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body { background-color: var(--light-bg); color: var(--dark); padding-bottom: 80px; }
 
-    /* টপবার */
     header {
       background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
       color: white;
@@ -51,47 +50,26 @@
 
     .container { max-width: 1150px; margin: 20px auto; padding: 0 14px; }
 
-    /* ইনলাইন ড্রপডাউন অ্যাডমিন বক্স (জাভাস্ক্রিপ্ট ছাড়া কাজ করবে) */
-    details.admin-collapse {
+    /* অ্যাডমিন বক্স */
+    .admin-card-box {
       background: white;
       border: 2px solid #6366f1;
       border-radius: 12px;
-      padding: 14px;
+      padding: 16px;
       margin-bottom: 20px;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
-    }
-    details.admin-collapse summary {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--primary);
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    details.admin-collapse summary::-webkit-details-marker { display: none; }
-    details.admin-collapse summary::after {
-      content: "▼ টাচ করে খুলুন";
-      font-size: 12px;
-      background: var(--primary-light);
-      padding: 4px 10px;
-      border-radius: 20px;
-    }
-    details[open].admin-collapse summary::after {
-      content: "▲ বন্ধ করুন";
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.08);
     }
 
     .login-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      display: flex;
       gap: 10px;
-      margin-top: 15px;
-      padding-top: 12px;
-      border-top: 1px dashed #cbd5e1;
+      flex-wrap: wrap;
+      margin-top: 10px;
     }
     .login-row input {
-      padding: 10px 12px;
+      flex: 1;
+      min-width: 200px;
+      padding: 11px 14px;
       border: 1px solid #cbd5e1;
       border-radius: 8px;
       font-size: 14px;
@@ -101,11 +79,16 @@
       background: var(--primary);
       color: white;
       border: none;
-      padding: 10px 16px;
+      padding: 11px 24px;
       border-radius: 8px;
       font-weight: 700;
       font-size: 14px;
       cursor: pointer;
+    }
+    .status-msg {
+      font-size: 13px;
+      margin-top: 8px;
+      font-weight: 600;
     }
 
     /* মূল অ্যাডমিন কন্ট্রোল প্যানেল */
@@ -126,7 +109,7 @@
     .adm-section.active { display: block; }
 
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 12px; }
-    .form-grid input, .form-grid select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; }
+    .form-grid input, .form-grid select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; }
     .btn-green { background: #16a34a; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
     /* ফিল্টারিং সেকশন */
@@ -164,7 +147,6 @@
 </head>
 <body>
 
-  <!-- হেডার -->
   <header>
     <div class="brand-box">
       <div class="brand-logo-wrap">
@@ -179,21 +161,22 @@
 
   <div class="container">
 
-    <!-- সুরক্ষিত অ্যাডমিন লগইন ড্রপডাউন (কোনো বাটন ছাড়াই টাচ করলেই খুলবে) -->
-    <details class="admin-collapse" id="adminLoginDetails">
-      <summary>🔒 অ্যাডমিন জোন (লগইন করতে এখানে টাচ করুন)</summary>
-      <div class="login-row">
-        <input type="email" id="admEmail" placeholder="ইমেইল দিন" value="roydarcoaching@gmail.com">
-        <input type="password" id="admPass" placeholder="পাসওয়ার্ড দিন (12345)">
-        <button type="button" class="btn-login" onclick="processLogin()">লগইন করুন</button>
-      </div>
-    </details>
+    <!-- অ্যাডমিন লগইন বক্স -->
+    <div class="admin-card-box" id="adminLoginBox">
+      <h3 style="font-size: 15px; color: var(--primary);">🔒 অ্যাডমিন জোন লগইন</h3>
+      <form onsubmit="event.preventDefault(); processLogin();" class="login-row">
+        <input type="email" id="admEmail" placeholder="ইমেইল দিন" value="roydarcoaching@gmail.com" required>
+        <input type="password" id="admPass" placeholder="পাসওয়ার্ড দিন" value="12345" required>
+        <button type="submit" class="btn-login">লগইন করুন</button>
+      </form>
+      <div id="loginFeedback" class="status-msg"></div>
+    </div>
 
-    <!-- অ্যাডমিন ড্যাশবোর্ড (লগইন হলে দৃশ্যমান হবে) -->
+    <!-- মূল অ্যাডমিন প্যানেল -->
     <div id="adminMasterArea">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <h3 style="color: #16a34a; font-size: 16px;">👑 অ্যাডমিন কন্ট্রোল প্যানেল সচল রয়েছে</h3>
-        <button onclick="processLogout()" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold;">লগআউট</button>
+        <h3 style="color: #16a34a; font-size: 16px;">👑 স্বাগতম অ্যাডমিন! আপনার ড্যাশবোর্ড সচল রয়েছে</h3>
+        <button onclick="processLogout()" style="background: #ef4444; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: bold;">লগআউট</button>
       </div>
 
       <div class="adm-tabs">
@@ -203,7 +186,7 @@
         <button class="adm-tbtn" onclick="switchTab('tabLogo', this)">লোগো পরিবর্তন</button>
       </div>
 
-      <!-- ক্লাস আপলোড সেকশন -->
+      <!-- ক্লাস আপলোড -->
       <div class="adm-section active" id="tabUpload">
         <div class="form-grid">
           <select id="upExam">
@@ -214,13 +197,13 @@
           <select id="upSub" onchange="syncTopicsDropdown()"></select>
           <select id="upTopic"></select>
           <input type="text" id="upTitle" placeholder="ক্লাসের অধ্যায়ের নাম">
-          <input type="text" id="upVideo" placeholder="YouTube Video ID বা পুরো লিংক">
+          <input type="text" id="upVideo" placeholder="YouTube Video ID বা লিংক">
           <input type="text" id="upPdf" placeholder="Google Drive PDF লিংক">
         </div>
         <button class="btn-green" onclick="saveNewClass()">+ ক্লাসটি পোর্টালে যুক্ত করুন</button>
       </div>
 
-      <!-- বিষয় যোগ সেকশন -->
+      <!-- নতুন বিষয় -->
       <div class="adm-section" id="tabSubject">
         <div class="form-grid">
           <input type="text" id="newSubKey" placeholder="আইডি (যেমন: computer)">
@@ -229,17 +212,17 @@
         <button class="btn-green" onclick="saveNewSubject()">+ নতুন বিষয় সেভ করুন</button>
       </div>
 
-      <!-- চ্যাপ্টার যোগ সেকশন -->
+      <!-- চ্যাপ্টার যোগ -->
       <div class="adm-section" id="tabTopic">
         <div class="form-grid">
           <select id="targetSubSelect"></select>
           <input type="text" id="newTopKey" placeholder="চ্যাপ্টার আইডি (যেমন: hardware)">
-          <input type="text" id="newTopName" placeholder="চ্যাপ্টারের নাম (যেমন: কম্পিউটার হার্ডওয়্যার)">
+          <input type="text" id="newTopName" placeholder="চ্যাপ্টারের নাম (যেমন: হার্ডওয়্যার)">
         </div>
         <button class="btn-green" onclick="saveNewTopic()">+ নতুন চ্যাপ্টার সেভ করুন</button>
       </div>
 
-      <!-- লোগো সেকশন -->
+      <!-- লোগো -->
       <div class="adm-section" id="tabLogo">
         <div class="form-grid">
           <input type="text" id="logoUrlField" placeholder="নতুন ছবির অনলাইন বা গুগল ড্রাইভ লিংক">
@@ -272,17 +255,16 @@
   </div>
 
   <script>
-    // ডেটা ও সেটিংস
     const MASTER_EMAIL = "roydarcoaching@gmail.com";
     const MASTER_PASS = "12345";
     let isLogged = false;
 
     let subjectsData = JSON.parse(localStorage.getItem('roy_subs_data')) || {
-      history: { name: 'ইতিহাস', topics: [ { id: 'ancient', name: 'Ancient India' }, { id: 'medieval', name: 'Medieval India' }, { id: 'modern', name: 'Modern India' }, { id: 'inm', name: 'জাতীয় আন্দোলন' } ] },
-      geography: { name: 'ভূগোল', topics: [ { id: 'wb_geo', name: 'West Bengal Geography' }, { id: 'indian_geo', name: 'Indian Geography' }, { id: 'physical_geo', name: 'Physical Geo' } ] },
-      polity: { name: 'সংবিধান', topics: [ { id: 'constitution', name: 'সংবিধান ও ধারা' }, { id: 'governance', name: 'শাসনব্যবস্থা' } ] },
-      math: { name: 'গণিত', topics: [ { id: 'arithmetic', name: 'পাটিগণিত' }, { id: 'algebra', name: 'বীজগণিত' }, { id: 'geometry', name: 'জ্যামিতি ও পরিমিতি' } ] },
-      science: { name: 'বিজ্ঞান', topics: [ { id: 'biology', name: 'জীববিজ্ঞান' }, { id: 'physics', name: 'পদার্থবিজ্ঞান' }, { id: 'chemistry', name: 'রসায়ন' } ] },
+      history: { name: 'ইতিহাস', topics: [ { id: 'ancient', name: 'Ancient India' }, { id: 'medieval', name: 'Medieval India' }, { id: 'modern', name: 'Modern India' } ] },
+      geography: { name: 'ভূগোল', topics: [ { id: 'wb_geo', name: 'West Bengal Geography' }, { id: 'indian_geo', name: 'Indian Geography' } ] },
+      polity: { name: 'সংবিধান', topics: [ { id: 'constitution', name: 'সংবিধান ও ধারা' } ] },
+      math: { name: 'গণিত', topics: [ { id: 'arithmetic', name: 'পাটিগণিত' }, { id: 'algebra', name: 'বীজগণিত' } ] },
+      science: { name: 'বিজ্ঞান', topics: [ { id: 'biology', name: 'জীববিজ্ঞান' }, { id: 'physics', name: 'পদার্থবিজ্ঞান' } ] },
       static_gk: { name: 'স্ট্যাটিক জিকে', topics: [ { id: 'art_culture', name: 'শিল্প ও সংস্কৃতি' }, { id: 'first_india', name: 'ভারতের প্রথম' } ] }
     };
 
@@ -316,33 +298,39 @@
     function processLogin() {
       const em = document.getElementById("admEmail").value.trim().toLowerCase();
       const ps = document.getElementById("admPass").value.trim();
+      const feedback = document.getElementById("loginFeedback");
 
       if (em === MASTER_EMAIL && ps === MASTER_PASS) {
         isLogged = true;
         localStorage.setItem("roy_admin_logged", "yes");
-        document.getElementById("adminLoginDetails").removeAttribute("open");
-        refreshAdminUI();
-        alert("লগইন সফল হয়েছে!");
+        feedback.style.color = "green";
+        feedback.innerText = "লগইন সফল হয়েছে! ড্যাশবোর্ড লোড হচ্ছে...";
+        setTimeout(() => {
+          refreshAdminUI();
+        }, 300);
       } else {
-        alert("ভুল পাসওয়ার্ড! সঠিক পাসওয়ার্ড 12345 দিন।");
+        feedback.style.color = "red";
+        feedback.innerText = "ভুল পাসওয়ার্ড! সঠিক পাসওয়ার্ড 12345 দিন।";
       }
     }
 
     function processLogout() {
       isLogged = false;
       localStorage.removeItem("roy_admin_logged");
+      document.getElementById("loginFeedback").innerText = "";
       refreshAdminUI();
     }
 
     function refreshAdminUI() {
       const pnl = document.getElementById("adminMasterArea");
-      const det = document.getElementById("adminLoginDetails");
+      const loginBox = document.getElementById("adminLoginBox");
+
       if (isLogged) {
         pnl.style.display = "block";
-        det.style.display = "none";
+        loginBox.style.display = "none";
       } else {
         pnl.style.display = "none";
-        det.style.display = "block";
+        loginBox.style.display = "block";
       }
       drawClasses();
     }
@@ -462,7 +450,6 @@
       document.getElementById("upTitle").value = '';
       document.getElementById("upVideo").value = '';
       document.getElementById("upPdf").value = '';
-      alert("ক্লাসটি যুক্ত হয়েছে!");
       drawClasses();
     }
 
@@ -477,8 +464,23 @@
     function saveNewSubject() {
       const k = document.getElementById("newSubKey").value.trim().toLowerCase().replace(/\s+/g, '_');
       const n = document.getElementById("newSubName").value.trim();
-      if (!k || !n) return alert("সব তথ্য দিন!");
+      if (!k || !n) return;
 
       subjectsData[k] = { name: n, topics: [] };
       localStorage.setItem('roy_subs_data', JSON.stringify(subjectsData));
-  
+      document.getElementById("newSubKey").value = '';
+      document.getElementById("newSubName").value = '';
+      buildSubButtons();
+      syncSelects();
+    }
+
+    function saveNewTopic() {
+      const sub = document.getElementById("targetSubSelect").value;
+      const k = document.getElementById("newTopKey").value.trim().toLowerCase().replace(/\s+/g, '_');
+      const n = document.getElementById("newTopName").value.trim();
+      if (!k || !n) return;
+
+      if (!subjectsData[sub].topics) subjectsData[sub].topics = [];
+      subjectsData[sub].topics.push({ id: k, name: n });
+      localStorage.setItem('roy_subs_data', JSON.stringify(subjectsData));
+      document.getElementById("newTopKey").
