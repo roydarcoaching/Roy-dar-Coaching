@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roy dar Coaching - ডায়নামিক এডু-পোর্টাল</title>
+  <title>Roy dar Coaching - সম্পূর্ণ ডায়নামিক এডু-পোর্টাল</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +15,6 @@
       --primary: #4338ca;
       --primary-dark: #312e81;
       --primary-light: #e0e7ff;
-      --accent: #f59e0b;
       --dark: #0f172a;
       --light-bg: #f8fafc;
       --text-muted: #64748b;
@@ -34,7 +33,7 @@
       align-items: center;
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 1000;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
@@ -55,20 +54,35 @@
     .brand-title h1 { font-size: 19px; font-weight: 800; line-height: 1.2; }
     .brand-title p { font-size: 11px; color: #cbd5e1; }
 
-    .btn-auth {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.3);
+    .btn-auth-top {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.4);
       color: white;
       padding: 8px 16px;
       border-radius: 20px;
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
     }
 
     .container { max-width: 1150px; margin: 20px auto; padding: 0 14px; }
 
-    /* অ্যাডমিন ড্যাশবোর্ড */
+    /* ইনলাইন অ্যাডমিন লগইন বক্স */
+    .admin-login-bar {
+      background: white;
+      border: 2px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+      display: none; /* টগল দিয়ে খুলবে */
+    }
+    .admin-login-bar.open { display: block; }
+    .login-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 10px; }
+    .login-inputs input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; outline: none; }
+    .btn-login-submit { background: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+    /* মাস্টার অ্যাডমিন ড্যাশবোর্ড */
     .master-admin-panel {
       background: white;
       border: 2px solid #6366f1;
@@ -120,29 +134,6 @@
     .action-row { display: flex; gap: 6px; }
     .btn-pdf { flex: 1; text-align: center; padding: 8px; background: #f8fafc; color: var(--primary); border: 1px solid var(--primary-light); border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 700; }
     .btn-delete { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; }
-
-    /* লগইন মোডাল */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(4px);
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      z-index: 9999;
-    }
-    .modal-box {
-      background: white;
-      padding: 24px;
-      border-radius: 14px;
-      width: 100%;
-      max-width: 360px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
-    .modal-box h3 { font-size: 18px; margin-bottom: 14px; font-weight: 800; }
-    .modal-box input { width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; margin-bottom: 12px; outline: none; font-size: 14px; }
   </style>
 </head>
 <body>
@@ -158,8 +149,8 @@
         <p>Govt. Exam Prep • ডিজিটাল স্টাডি পোর্টাল</p>
       </div>
     </div>
-    <div id="authContainer">
-      <button type="button" class="btn-auth" id="loginBtnTrigger" onclick="openLoginModal()">
+    <div id="authHeaderBox">
+      <button type="button" class="btn-auth-top" id="topAuthBtn" onclick="toggleLoginSection()">
         <i class="fa-solid fa-lock"></i> অ্যাডমিন লগইন
       </button>
     </div>
@@ -167,7 +158,17 @@
 
   <div class="container">
 
-    <!-- অ্যাডমিন ড্যাশবোর্ড -->
+    <!-- ইনলাইন লগইন বার (বাটনে চাপলে ঠিক নিচে নামবে) -->
+    <div class="admin-login-bar" id="loginDropdownArea">
+      <h4 style="font-size: 15px; margin-bottom: 6px;"><i class="fa-solid fa-shield-halved"></i> অ্যাডমিন লগইন করুন</h4>
+      <div class="login-inputs">
+        <input type="email" id="loginEmail" placeholder="roydarcoaching@gmail.com" value="roydarcoaching@gmail.com">
+        <input type="password" id="loginPass" placeholder="পাসওয়ার্ড দিন (12345)">
+        <button type="button" class="btn-login-submit" onclick="submitAdminLogin()">লগইন নিশ্চিত করুন</button>
+      </div>
+    </div>
+
+    <!-- মাস্টার অ্যাডমিন ড্যাশবোর্ড -->
     <div class="master-admin-panel" id="masterAdminPanel">
       <div class="admin-tab-btns">
         <button class="adm-tab active" onclick="switchAdminTab('classesTab', this)"><i class="fa-solid fa-video"></i> ক্লাস আপলোড</button>
@@ -197,8 +198,8 @@
       <div class="admin-sub-section" id="subjectTab">
         <p style="font-size: 13px; color: #64748b; margin-bottom: 8px;">যেকোনো নতুন সাবজেক্ট (যেমন: Bengali, Computer ইত্যাদি) যোগ করুন:</p>
         <div class="form-row">
-          <input type="text" id="newSubjectKey" placeholder="সাবজেক্ট আইডি (उदा. computer)">
-          <input type="text" id="newSubjectName" placeholder="সাবজেক্টের নাম (उदा. কম্পিউটার)">
+          <input type="text" id="newSubjectKey" placeholder="সাবজেক্ট আইডি (যেমন: computer)">
+          <input type="text" id="newSubjectName" placeholder="সাবজেক্টের নাম (যেমন: কম্পিউটার)">
         </div>
         <button class="btn-action" onclick="createNewSubject()">+ সাবজেক্ট সেভ করুন</button>
       </div>
@@ -207,8 +208,8 @@
       <div class="admin-sub-section" id="topicTab">
         <div class="form-row">
           <select id="targetSubForTopic"></select>
-          <input type="text" id="newTopicKey" placeholder="টপিক আইডি (उदा. ms_word)">
-          <input type="text" id="newTopicName" placeholder="টপিকের নাম (उदा. MS Word)">
+          <input type="text" id="newTopicKey" placeholder="টপিক আইডি (যেমন: ms_word)">
+          <input type="text" id="newTopicName" placeholder="টপিকের নাম (যেমন: MS Word)">
         </div>
         <button class="btn-action" onclick="createNewTopic()">+ সাব-টপিক যোগ করুন</button>
       </div>
@@ -246,33 +247,63 @@
 
   </div>
 
-  <!-- লগইন মোডাল বক্স -->
-  <div class="modal-overlay" id="authModal">
-    <div class="modal-box">
-      <h3>অ্যাডমিন সাইন-ইন</h3>
-      <input type="email" id="loginEmail" placeholder="roydarcoaching@gmail.com">
-      <input type="password" id="loginPass" placeholder="পাসওয়ার্ড দিন (12345)">
-      <button class="btn-action" style="width: 100%; margin-bottom: 8px;" onclick="verifyAdminLogin()">লগইন করুন</button>
-      <button class="pill" style="width: 100%; border-radius: 6px; padding: 9px;" onclick="closeLoginModal()">বাতিল</button>
-    </div>
-  </div>
-
   <script>
-    // মোডাল ওপেন/ক্লোজ (সবার আগে রাখা হলো যাতে টাচ করলেই কাজ করে)
-    function openLoginModal() {
-      document.getElementById("authModal").style.display = 'flex';
-    }
-    function closeLoginModal() {
-      document.getElementById("authModal").style.display = 'none';
-    }
-
-    // অ্যাডমিন আইডি ও পাসওয়ার্ড
     const MASTER_ADMIN_EMAIL = "roydarcoaching@gmail.com";
-    const MASTER_ADMIN_PASS = "12345"; // সহজ পাসওয়ার্ড দেওয়া হলো
+    const MASTER_ADMIN_PASS = "12345";
 
     let isAdmin = false;
 
-    // ডিফল্ট সাবজেক্ট ও ক্লাস ডেটা
+    // টপ লগইন বার টগল করা
+    function toggleLoginSection() {
+      const area = document.getElementById("loginDropdownArea");
+      area.classList.toggle("open");
+    }
+
+    // অ্যাডমিন লগইন ভেরিফাই
+    function submitAdminLogin() {
+      const em = document.getElementById("loginEmail").value.trim().toLowerCase();
+      const ps = document.getElementById("loginPass").value.trim();
+
+      if (em === MASTER_ADMIN_EMAIL && ps === MASTER_ADMIN_PASS) {
+        isAdmin = true;
+        localStorage.setItem("roy_master_admin", "active");
+        document.getElementById("loginDropdownArea").classList.remove("open");
+        refreshAdminView();
+        alert("স্বাগতম Roy dar! অ্যাডমিন প্যানেল সফলভাবে উন্মুক্ত হয়েছে।");
+      } else {
+        alert("ভুল পাসওয়ার্ড! সঠিক পাসওয়ার্ড 12345 দিন।");
+      }
+    }
+
+    function refreshAdminView() {
+      const authHeader = document.getElementById("authHeaderBox");
+      const masterPanel = document.getElementById("masterAdminPanel");
+
+      if (isAdmin) {
+        authHeader.innerHTML = `
+          <button type="button" class="btn-auth-top" style="background:#ef4444; border-color:#ef4444;" onclick="logoutAdminAction()">
+            লগআউট
+          </button>
+        `;
+        masterPanel.style.display = 'block';
+      } else {
+        authHeader.innerHTML = `
+          <button type="button" class="btn-auth-top" onclick="toggleLoginSection()">
+            <i class="fa-solid fa-lock"></i> অ্যাডমিন লগইন
+          </button>
+        `;
+        masterPanel.style.display = 'none';
+      }
+      renderClassGrid();
+    }
+
+    function logoutAdminAction() {
+      isAdmin = false;
+      localStorage.removeItem("roy_master_admin");
+      refreshAdminView();
+    }
+
+    // সাবজেক্ট ও ক্লাসের লোকাল স্টোরেজ ডাটাবেস
     let subjectsData = JSON.parse(localStorage.getItem('roy_subjects')) || {
       history: { name: 'ইতিহাস', topics: [ { id: 'ancient', name: 'Ancient India' }, { id: 'medieval', name: 'Medieval India' }, { id: 'modern', name: 'Modern India' }, { id: 'inm', name: 'জাতীয় আন্দোলন' } ] },
       geography: { name: 'ভূগোল', topics: [ { id: 'wb_geo', name: 'West Bengal Geography' }, { id: 'indian_geo', name: 'Indian Geography' }, { id: 'physical_geo', name: 'Physical Geo' } ] },
@@ -288,7 +319,7 @@
         exam: 'oneday civil',
         sub: 'history',
         topic: 'ancient',
-        title: 'সিন্ধু সভ্যতা ও নগর পরিকল্পনা (Indus Valley)',
+        title: 'সিন্ধু সভ্যতা ও হরপ্পা সংস্কৃতি (Ancient History)',
         videoId: 'M7lc1UVf-VE',
         pdfUrl: '#'
       }
@@ -297,15 +328,18 @@
     let activeFilter = { exam: 'all', sub: 'all', topic: 'all' };
 
     window.onload = function() {
-      // সেভ করা লোগো থাকলে বসানো
       const savedLogo = localStorage.getItem('roy_custom_logo');
       if (savedLogo) {
         document.getElementById("siteLogo").src = savedLogo;
       }
 
+      if (localStorage.getItem("roy_master_admin") === "active") {
+        isAdmin = true;
+      }
+
       buildSubjectUI();
       syncAdminSubjectSelects();
-      checkExistingSession();
+      refreshAdminView();
       renderClassGrid();
     };
 
@@ -398,47 +432,4 @@
     }
 
     function submitNewClass() {
-      const title = document.getElementById("uploadTitle").value.trim();
-      let rawVideo = document.getElementById("uploadVideo").value.trim();
-      const pdf = document.getElementById("uploadPdf").value.trim();
-
-      if (!title || !rawVideo) {
-        alert("দয়া করে ক্লাসের নাম ও ভিডিও আইডি/লিংক দিন!");
-        return;
-      }
-
-      let videoId = rawVideo;
-      if (rawVideo.includes("v=")) videoId = rawVideo.split("v=")[1].split("&")[0];
-      else if (rawVideo.includes("youtu.be/")) videoId = rawVideo.split("youtu.be/")[1].split("?")[0];
-
-      const newEntry = {
-        id: Date.now().toString(),
-        exam: document.getElementById("uploadExam").value,
-        sub: document.getElementById("uploadSub").value,
-        topic: document.getElementById("uploadTopic").value,
-        title: title,
-        videoId: videoId,
-        pdfUrl: pdf || '#'
-      };
-
-      siteClasses.unshift(newEntry);
-      localStorage.setItem('roy_classes', JSON.stringify(siteClasses));
-
-      document.getElementById("uploadTitle").value = '';
-      document.getElementById("uploadVideo").value = '';
-      document.getElementById("uploadPdf").value = '';
-
-      alert("ক্লাসটি সফলভাবে যোগ হয়েছে!");
-      renderClassGrid();
-    }
-
-    function deleteClassDoc(id) {
-      if (confirm("ক্লাসটি মুছে ফেলতে চান?")) {
-        siteClasses = siteClasses.filter(c => c.id !== id);
-        localStorage.setItem('roy_classes', JSON.stringify(siteClasses));
-        renderClassGrid();
-      }
-    }
-
-    function createNewSubject() {
-      const key = document.getElementByI
+ 
