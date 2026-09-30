@@ -432,7 +432,7 @@
       }
     }
 
-    function updateAdminUI() {
+   function updateAdminUI() {
       const authBox = document.getElementById('authBox');
       const adminPanel = document.getElementById('adminPanel');
 
@@ -446,4 +446,22 @@
         authBox.innerHTML = `<button class="btn-admin-gate" onclick="openLoginModal()">🔒 Admin Panel</button>`;
         adminPanel.style.display = 'none';
       }
-   
+      renderCards();
+    }
+
+    function handleAdminLogout() {
+      isAdminLoggedIn = false;
+      sessionStorage.removeItem('roy_admin_session');
+      updateAdminUI();
+      alert("অ্যাডমিন সেশন সমাপ্ত হয়েছে।");
+    }
+
+    function checkAdminSession() {
+      if (sessionStorage.getItem('roy_admin_session') === 'active') {
+        isAdminLoggedIn = true;
+      }
+      updateAdminUI();
+    }
+  </script>
+</body>
+</html>
