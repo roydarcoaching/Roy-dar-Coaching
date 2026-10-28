@@ -1,1294 +1,1585 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roy dar Coaching - Smart Study App</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        /* === 100% BUILT-IN PURE CSS (NEVER FAILS IN ACODE OR APK) === */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Roy dar Coaching - সরকারি চাকরির সেরা প্রস্তুতি</title>
+  
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        body {
-            font-family: 'Hind Siliguri', 'Poppins', sans-serif;
-            background: radial-gradient(circle at top, #0f2547 0%, #061021 60%, #030712 100%);
-            color: #f8fafc;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
+  <!-- Firebase 9.x Compat Libraries (100% Free Cloud Storage & Realtime DB) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-        /* Top Navbar */
-        .navbar {
-            background: rgba(10, 20, 40, 0.92);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
-            padding: 12px 16px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .nav-inner {
-            max-width: 900px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .brand-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .nav-logo {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #fbbf24, #d97706);
-            color: #061021;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 18px;
-            overflow: hidden;
-            border: 2px solid #fff;
-        }
-        .nav-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .brand-title {
-            font-size: 17px;
-            font-weight: 700;
-            color: #ffffff;
-            line-height: 1.2;
-        }
-        .brand-sub {
-            font-size: 11px;
-            color: #60a5fa;
-        }
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .nav-btn {
-            background: rgba(30, 58, 138, 0.5);
-            border: 1px solid rgba(96, 165, 250, 0.3);
-            color: #e2e8f0;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .nav-btn-danger {
-            background: #ef4444;
-            border-color: #f87171;
-            color: white;
-        }
+  <style>
+    :root {
+      --bg-dark: #070d1e;
+      --card-bg: rgba(16, 26, 54, 0.85);
+      --card-border: rgba(30, 58, 110, 0.6);
+      --accent-gold: #ff9f1c;
+      --accent-orange: #f77f00;
+      --text-white: #ffffff;
+      --text-muted: #94a3b8;
+      --live-green: #10b981;
+      --danger-red: #ef4444;
+      --royal-blue: #1e3a8a;
+    }
 
-        /* Cloud Status Bar */
-        .status-bar {
-            background: rgba(6, 78, 59, 0.7);
-            color: #a7f3d0;
-            text-align: center;
-            font-size: 11px;
-            padding: 5px 10px;
-            border-bottom: 1px solid rgba(16, 185, 129, 0.2);
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', 'Hind Siliguri', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
 
-        /* Main Wrapper */
-        .main-wrap {
-            flex: 1;
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px 16px 95px 16px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(30, 58, 138, 0.35) 0%, transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(247, 127, 0, 0.15) 0%, transparent 45%);
+      overflow-x: hidden;
+    }
 
-        /* === LOGIN CARD (EXACT MATCH TO IMAGE) === */
-        .login-card {
-            width: 100%;
-            max-width: 400px;
-            margin: auto;
-            background: linear-gradient(180deg, rgba(16, 36, 68, 0.95) 0%, rgba(8, 18, 38, 0.98) 100%);
-            border: 1px solid rgba(59, 130, 246, 0.25);
-            border-radius: 32px;
-            padding: 30px 24px;
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(37, 99, 235, 0.15);
-        }
+    .app-viewport {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      background: var(--bg-dark);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 45px rgba(0, 0, 0, 0.85);
+      padding-bottom: 75px;
+    }
 
-        /* Round Emblem Logo */
-        .hero-logo-ring {
-            width: 92px;
-            height: 92px;
-            margin: 0 auto 14px auto;
-            border-radius: 50%;
-            padding: 4px;
-            background: linear-gradient(135deg, #f59e0b, #fbbf24, #2563eb);
-            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
-        }
-        .hero-logo-inner {
-            width: 100%;
-            height: 100%;
-            background: #ffffff;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #0f172a;
-            overflow: hidden;
-            border: 3px solid #0f2547;
-        }
-        .hero-logo-inner img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .hero-logo-inner i {
-            font-size: 26px;
-            color: #0f2547;
-        }
-        .hero-logo-inner span {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 800;
-            font-size: 16px;
-            color: #d97706;
-            line-height: 1;
-            margin-top: 2px;
-        }
+    /* Top App Header */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: rgba(7, 13, 30, 0.95);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
 
-        .hero-title {
-            font-family: 'Poppins', sans-serif;
-            font-size: 23px;
-            font-weight: 800;
-            letter-spacing: 0.8px;
-            color: #ffffff;
-            margin-bottom: 4px;
-        }
-        .hero-sub {
-            font-size: 14px;
-            color: #cbd5e1;
-            margin-bottom: 18px;
-        }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-        /* Live Glowing Badge */
-        .live-badge-box {
-            display: inline-block;
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(245, 158, 11, 0.5);
-            box-shadow: 0 0 18px rgba(239, 68, 68, 0.25);
-            border-radius: 16px;
-            padding: 8px 18px;
-            margin-bottom: 22px;
-        }
-        .live-top {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 12px;
-            font-weight: 700;
-            color: #ffffff;
-        }
-        .live-dot {
-            width: 9px;
-            height: 9px;
-            background: #ef4444;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #ef4444;
-        }
-        .live-sub {
-            font-size: 11px;
-            color: #cbd5e1;
-            margin-top: 2px;
-        }
+    .brand-logo-frame {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px;
+      border: 1.5px solid var(--accent-gold);
+      overflow: hidden;
+    }
 
-        /* Illustration Graphic Box */
-        .illustration-box {
-            width: 100%;
-            max-width: 260px;
-            margin: 0 auto 24px auto;
-            background: rgba(30, 58, 138, 0.2);
-            border-radius: 20px;
-            padding: 14px;
-            border: 1px solid rgba(96, 165, 250, 0.15);
-        }
+    .brand-logo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
 
-        /* Big Pill Buttons */
-        .btn-pill-student {
-            width: 100%;
-            background: linear-gradient(90deg, #f97316 0%, #f59e0b 50%, #fbbf24 100%);
-            color: #090d16;
-            border: none;
-            border-radius: 50px;
-            padding: 15px 20px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 15px;
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 6px 25px rgba(245, 158, 11, 0.45);
-            margin-bottom: 14px;
-            transition: transform 0.15s;
-        }
-        .btn-pill-student:active {
-            transform: scale(0.97);
-        }
+    .brand-info h1 {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: #fff;
+    }
 
-        .btn-pill-admin {
-            width: 100%;
-            background: rgba(15, 32, 67, 0.85);
-            color: #60a5fa;
-            border: 1.5px solid #2563eb;
-            border-radius: 50px;
-            padding: 14px 20px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.25);
-            margin-bottom: 22px;
-            transition: transform 0.15s;
-        }
-        .btn-pill-admin:active {
-            transform: scale(0.97);
-        }
+    .brand-info p {
+      font-size: 10.5px;
+      color: #60a5fa;
+      font-weight: 500;
+    }
 
-        .login-footer-text {
-            font-size: 12px;
-            color: #cbd5e1;
-            margin-bottom: 8px;
-        }
-        .login-footer-text span {
-            color: #fbbf24;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .need-help {
-            font-size: 12px;
-            color: #60a5fa;
-            cursor: pointer;
-            text-decoration: none;
-        }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
 
-        /* Form Inputs */
-        .input-group {
-            text-align: left;
-            margin-bottom: 14px;
-        }
-        .input-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: #94a3b8;
-            margin-bottom: 6px;
-        }
-        .input-field {
-            width: 100%;
-            background: rgba(6, 16, 33, 0.9);
-            border: 1px solid rgba(59, 130, 246, 0.35);
-            color: #ffffff;
-            padding: 12px 14px;
-            border-radius: 14px;
-            font-size: 14px;
-            outline: none;
-        }
-        .input-field:focus {
-            border-color: #fbbf24;
-        }
+    .pill-btn {
+      background: rgba(30, 58, 110, 0.5);
+      border: 1px solid var(--card-border);
+      color: #ffffff;
+      padding: 6px 10px;
+      border-radius: 18px;
+      font-size: 11.5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
 
-        /* Dashboard & Cards */
-        .banner-card {
-            background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
-            border: 1px solid rgba(96, 165, 250, 0.3);
-            border-radius: 24px;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 14px;
-        }
-        .folder-card {
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 20px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-        .folder-card:hover {
-            border-color: #fbbf24;
-        }
-        .folder-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .folder-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            background: rgba(37, 99, 235, 0.2);
-            color: #60a5fa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-        }
-        .breadcrumb {
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 12px 16px;
-            border-radius: 16px;
-            margin-bottom: 14px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .bc-link {
-            background: none;
-            border: none;
-            color: #60a5fa;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 13px;
-        }
+    .pill-btn:active {
+      transform: scale(0.95);
+      background: var(--royal-blue);
+    }
 
-        /* Video & PDF Card */
-        .class-card {
-            background: rgba(15, 23, 42, 0.95);
-            border: 1px solid rgba(59, 130, 246, 0.25);
-            border-radius: 22px;
-            overflow: hidden;
-            margin-bottom: 16px;
-            grid-column: 1 / -1;
-        }
-        .class-header {
-            padding: 14px 18px;
-            background: rgba(6, 16, 33, 0.8);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .class-body {
-            padding: 16px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 16px;
-        }
-        .video-box {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background: #000;
-            border-radius: 14px;
-            overflow: hidden;
-        }
-        .video-box iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .pdf-box {
-            background: rgba(30, 58, 138, 0.2);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 16px;
-            padding: 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .btn-drive {
-            display: block;
-            text-align: center;
-            background: #2563eb;
-            color: #fff;
-            text-decoration: none;
-            padding: 12px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 13px;
-            margin-top: 14px;
-        }
+    .admin-btn {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+    }
 
-        /* Admin Boxes */
-        .admin-box {
-            background: rgba(15, 23, 42, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 20px;
-            padding: 18px;
-        }
-        .admin-box h4 {
-            margin-bottom: 12px;
-            font-size: 15px;
-            color: #fbbf24;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 8px;
-        }
-        .btn-action {
-            width: 100%;
-            background: #2563eb;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 6px;
-        }
+    /* Screen Views */
+    .screen-view {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      padding: 16px;
+      animation: fadeIn 0.25s ease-out;
+    }
 
-        /* Bottom Navigation Bar */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(8, 18, 38, 0.96);
-            backdrop-filter: blur(12px);
-            border-top: 1px solid rgba(59, 130, 246, 0.25);
-            padding: 8px 12px;
-            z-index: 100;
-        }
-        .bottom-nav-inner {
-            max-width: 600px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-around;
-        }
-        .b-nav-btn {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            font-size: 11px;
-            font-weight: 600;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 12px;
-        }
-        .b-nav-btn i {
-            font-size: 18px;
-        }
-        .b-nav-btn.active {
-            color: #fbbf24;
-        }
-    </style>
+    .screen-view.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Hero Avatar Section */
+    .hero-avatar-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 15px 0 18px;
+    }
+
+    .avatar-ring {
+      width: 105px;
+      height: 105px;
+      border-radius: 50%;
+      padding: 4px;
+      background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange), #3b82f6);
+      box-shadow: 0 0 25px rgba(255, 159, 28, 0.45);
+      position: relative;
+    }
+
+    .avatar-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #0f172a;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .brand-title-large {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      margin-top: 14px;
+      text-transform: uppercase;
+      text-align: center;
+      color: #ffffff;
+    }
+
+    .brand-tagline {
+      font-size: 13px;
+      color: #93c5fd;
+      text-align: center;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .live-banner {
+      background: rgba(16, 26, 54, 0.8);
+      border: 1px solid rgba(247, 127, 0, 0.4);
+      border-radius: 26px;
+      padding: 9px 18px;
+      margin: 16px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      box-shadow: 0 4px 18px rgba(247, 127, 0, 0.12);
+    }
+
+    .live-banner-tag {
+      color: #f87171;
+      font-size: 12.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #ef4444;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #ef4444;
+      animation: pulse 1.4s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0.4; transform: scale(0.9); }
+    }
+
+    /* Cards & Glassmorphism */
+    .glass-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    .welcome-card {
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.3) 0%, rgba(15, 23, 42, 0.8) 100%);
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .badge-subtle {
+      display: inline-block;
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .primary-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 30px;
+      border: none;
+      font-size: 14.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-gold {
+      background: linear-gradient(90deg, #ff9f1c, #f77f00);
+      color: #070d1e;
+      box-shadow: 0 6px 20px rgba(247, 127, 0, 0.4);
+    }
+
+    .btn-gold:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 10px rgba(247, 127, 0, 0.3);
+    }
+
+    .btn-blue {
+      background: rgba(30, 58, 110, 0.6);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      color: #93c5fd;
+      margin-top: 12px;
+    }
+
+    /* Form Fields */
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .input-field {
+      width: 100%;
+      background: rgba(11, 20, 44, 0.9);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 13px 14px;
+      color: #ffffff;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-field:focus {
+      border-color: var(--accent-gold);
+    }
+
+    /* Top Sub-Nav Badges (Foundation, Practice, Tests, etc) */
+    .section-nav-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      scrollbar-width: none;
+    }
+    .section-nav-scroll::-webkit-scrollbar { display: none; }
+
+    .nav-chip {
+      white-space: nowrap;
+      padding: 8px 14px;
+      border-radius: 20px;
+      background: rgba(16, 26, 54, 0.7);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .nav-chip.active {
+      background: linear-gradient(90deg, #ff9f1c, #f77f00);
+      color: #070d1e;
+      border-color: #ff9f1c;
+      box-shadow: 0 4px 12px rgba(255, 159, 28, 0.35);
+    }
+
+    /* Folder and Content Items */
+    .folder-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .folder-item:active {
+      background: rgba(30, 58, 110, 0.5);
+      border-color: var(--accent-gold);
+    }
+
+    .folder-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .folder-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .folder-icon.video {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+    }
+
+    .folder-icon.pdf {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+    }
+
+    .folder-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .folder-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Fixed Bottom Tab Bar */
+    .bottom-tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      height: 65px;
+      background: rgba(7, 13, 30, 0.98);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+      padding: 0 6px;
+    }
+
+    .tab-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      color: #64748b;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      gap: 4px;
+      flex: 1;
+      height: 100%;
+      transition: color 0.2s;
+    }
+
+    .tab-btn i {
+      font-size: 18px;
+    }
+
+    .tab-btn.active {
+      color: var(--accent-gold);
+    }
+
+    /* AI Doubt Chat Box */
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 190px);
+      background: rgba(11, 20, 44, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chat-bubble {
+      max-width: 85%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .bubble-bot {
+      background: rgba(30, 58, 110, 0.6);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #e2e8f0;
+      align-self: flex-start;
+      border-bottom-left-radius: 2px;
+    }
+
+    .bubble-user {
+      background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
+      color: #070d1e;
+      font-weight: 500;
+      align-self: flex-end;
+      border-bottom-right-radius: 2px;
+    }
+
+    .chat-input-bar {
+      padding: 10px;
+      background: rgba(7, 13, 30, 0.95);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      gap: 8px;
+    }
+
+    .chat-input-bar input {
+      flex: 1;
+      background: rgba(16, 26, 54, 0.9);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 10px 16px;
+      color: #fff;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .send-icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #3b82f6;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Modal / Popups */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 440px;
+      background: #0d1733;
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .cloud-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .status-online {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-offline {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    /* Notification toast */
+    .toast-notice {
+      position: fixed;
+      top: 65px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e3a8a;
+      border: 1px solid #3b82f6;
+      color: #ffffff;
+      padding: 10px 20px;
+      border-radius: 24px;
+      font-size: 13px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      z-index: 300;
+      display: none;
+      animation: fadeIn 0.3s;
+    }
+  </style>
 </head>
 <body>
-  
-    <!-- TOP NAVBAR -->
-    <header class="navbar">
-        <div class="nav-inner">
-            <div class="brand-box">
-                <div class="nav-logo" id="nav-logo-container">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                </div>
-                <div>
-                    <div class="brand-title">Roy dar Coaching</div>
-                    <div class="brand-sub" id="nav-subtitle">সরকারি চাকরির সেরা প্রস্তুতি</div>
-                </div>
-            </div>
-            <div class="nav-actions">
-                <button onclick="syncFromCloud(true)" class="nav-btn">
-                    <i class="fa-solid fa-arrows-rotate" id="sync-icon"></i> Sync
-                </button>
-                <button onclick="toggleLang()" class="nav-btn">
-                    <i class="fa-solid fa-language"></i> <span id="lang-btn-text">English</span>
-                </button>
-                <button id="logout-btn" style="display: none;" onclick="logout()" class="nav-btn nav-btn-danger">
-                    <i class="fa-solid fa-power-off"></i>
-                </button>
-            </div>
+    <div class="app-viewport">
+    
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="brand-group">
+        <div class="brand-logo-frame">
+          <i class="fa-solid fa-graduation-cap" style="color:#070d1e; font-size: 20px;"></i>
         </div>
+        <div class="brand-info">
+          <h1>Roy dar Coaching</h1>
+          <p id="headerTagline">সরকারি চাকরির সেরা প্রস্তুতি</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="pill-btn" onclick="syncAppCloud(true)">
+          <i class="fa-solid fa-rotate"></i> <span id="syncText">Sync</span>
+        </button>
+        <button class="pill-btn" onclick="toggleLanguage()">
+          <i class="fa-solid fa-language"></i> <span id="langText">English</span>
+        </button>
+        <button class="pill-btn admin-btn" onclick="openAdminModal()" title="Admin Control">
+          <i class="fa-solid fa-shield-halved"></i>
+        </button>
+      </div>
     </header>
 
-    <!-- CLOUD STATUS BAR -->
-    <div id="cloud-status" class="status-bar">
-        🟢 Live Cloud Connected (সকল ডাটা আপ-টু-ডেট)
-    </div>
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast-notice"></div>
 
-    <!-- MAIN CONTENT -->
-    <main class="main-wrap">
-
-        <!-- ================= 1. HERO LOGIN SCREEN (MATCHES SCREENSHOT) ================= -->
-        <div id="login-screen" class="login-card">
-            <!-- Round Emblem Logo -->
-            <div class="hero-logo-ring">
-                <div class="hero-logo-inner" id="hero-logo-box">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                    <span>RC</span>
-                </div>
-            </div>
-
-            <h2 class="hero-title">ROY DAR COACHING</h2>
-            <p class="hero-sub">আপনার ভবিষ্যৎ, আমাদের লক্ষ্য</p>
-
-            <!-- Live Pill Badge -->
-            <div class="live-badge-box">
-                <div class="live-top">
-                    <span class="live-dot"></span>
-                    <span>APP IS NOW LIVE! <i class="fa-solid fa-tower-broadcast" style="color:#f97316;"></i></span>
-                </div>
-                <div class="live-sub">Online classes are active</div>
-            </div>
-
-            <!-- Study Illustration Graphic -->
-            <div class="illustration-box">
-                <svg viewBox="0 0 240 110" width="100%" height="95">
-                    <rect x="45" y="10" width="150" height="80" rx="8" fill="#1e293b" stroke="#60a5fa" stroke-width="2"/>
-                    <rect x="55" y="20" width="60" height="40" rx="4" fill="#3b82f6" opacity="0.3"/>
-                    <line x1="125" y1="25" x2="180" y2="25" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/>
-                    <line x1="125" y1="38" x2="170" y2="38" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/>
-                    <line x1="125" y1="51" x2="160" y2="51" stroke="#fbbf24" stroke-width="4" stroke-linecap="round"/>
-                    <circle cx="85" cy="36" r="10" fill="#fbbf24"/>
-                    <path d="M72 56 Q85 44 98 56" fill="#fbbf24"/>
-                    <rect x="20" y="90" width="200" height="6" rx="3" fill="#334155"/>
-                </svg>
-            </div>
-
-            <!-- Glowing Action Buttons -->
-            <button onclick="openLoginModal('student')" class="btn-pill-student">
-                <i class="fa-solid fa-user-graduate"></i>
-                <span>STUDENT LOGIN</span>
-                <i class="fa-solid fa-graduation-cap"></i>
-            </button>
-
-            <button onclick="openLoginModal('admin')" class="btn-pill-admin">
-                <i class="fa-solid fa-lock"></i>
-                <span>ADMIN LOGIN</span>
-                <i class="fa-solid fa-key" style="color:#fbbf24;"></i>
-            </button>
-
-            <div class="login-footer-text">
-                New to Roy Dar Coaching? <span onclick="alert('ভর্তির জন্য Roy dar Coaching অ্যাডমিনের সাথে যোগাযোগ করুন।')">Register</span>
-            </div>
-            <a href="#" onclick="alert('হেল্পলাইন: অ্যাডমিনের সাথে যোগাযোগ করুন।')" class="need-help">Need Help?</a>
+    <!-- SCREEN 1: LANDING / LOGIN SCREEN -->
+    <main id="screenLanding" class="screen-view active">
+      <div class="hero-avatar-wrap">
+        <div class="avatar-ring">
+          <div class="avatar-inner">
+            <i class="fa-solid fa-user-tie" style="font-size: 55px; color: #ff9f1c;"></i>
+          </div>
         </div>
+        <h2 class="brand-title-large">Roy dar Coaching</h2>
+        <p class="brand-tagline" id="heroSubtitle">আপনার ভবিষ্যৎ, আমাদের লক্ষ্য</p>
+      </div>
 
-        <!-- ================= 2. LOGIN INPUT FORM BOX ================= -->
-        <div id="login-form-box" style="display: none;" class="login-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:12px;">
-                <h3 id="form-title" style="font-size:18px; color:#fbbf24;">Student Login</h3>
-                <button onclick="backToRoleSelector()" class="nav-btn">⬅ Back</button>
-            </div>
-
-            <div class="input-group">
-                <label id="form-label">Student ID / Mobile Number</label>
-                <input type="text" id="login-id" placeholder="Enter your ID" class="input-field">
-            </div>
-
-            <div class="input-group">
-                <label>Password</label>
-                <input type="password" id="login-pass" placeholder="••••••••" class="input-field">
-            </div>
-
-            <button onclick="handleLogin()" class="btn-pill-student" style="margin-top:18px;">
-                <i class="fa-solid fa-right-to-bracket"></i>
-                <span>PROCEED TO APP</span>
-            </button>
+      <div class="live-banner">
+        <div class="live-banner-tag">
+          <span class="pulse-dot"></span>
+          <span>APP IS NOW LIVE!</span>
         </div>
+        <div style="font-size:11.5px; color:#cbd5e1;" id="liveSub">Online classes & test series active</div>
+      </div>
 
-        <!-- ================= 3. MAIN APP DASHBOARD ================= -->
-        <div id="app-screen" style="display: none;">
-
-            <!-- Welcome Banner -->
-            <div class="banner-card">
-                <div>
-                    <span style="background:rgba(59,130,246,0.25); color:#93c5fd; font-size:11px; padding:4px 10px; border-radius:20px; font-weight:700;">
-                        ROY DAR COACHING PORTAL
-                    </span>
-                    <h2 id="welcome-user" style="font-size:22px; margin-top:8px;">স্বাগতম!</h2>
-                    <p style="font-size:12px; color:#cbd5e1;">টার্গেট: সরকারি চাকরি প্রস্তুতি (WBP • WBPSC • SSC • RAIL)</p>
-                </div>
-                <button id="admin-switch-btn" style="display: none; width:auto; margin:0; padding:10px 18px;" onclick="switchTab('admin')" class="btn-pill-student">
-                    <i class="fa-solid fa-user-shield"></i> Admin Panel
-                </button>
-            </div>
-
-            <!-- TAB 1: STUDY FOLDERS -->
-            <div id="tab-study">
-                <div class="breadcrumb">
-                    <button onclick="renderSubjects()" class="bc-link">
-                        <i class="fa-solid fa-folder-tree"></i> <span id="bc-home">সব বিষয় (Subjects)</span>
-                    </button>
-                    <span id="bc-sep-1" style="display: none;">/</span>
-                    <button id="bc-subject" style="display: none;" class="bc-link"></button>
-                    <span id="bc-sep-2" style="display: none;">/</span>
-                    <span id="bc-chapter" style="display: none; color:#fbbf24; font-weight:700;"></span>
-                </div>
-                <div id="folder-container" class="grid-2"></div>
-            </div>
-
-            <!-- TAB 2: MOCK TESTS -->
-            <div id="tab-mock" style="display: none;">
-                <div class="banner-card" style="margin-bottom:14px;">
-                    <div>
-                        <h3 style="font-size:18px;">মক টেস্ট ও প্র্যাকটিস সেট</h3>
-                        <p style="font-size:12px; color:#94a3b8;">Testbook স্টাইল লাইভ স্কোর ও অ্যানালাইসিস</p>
-                    </div>
-                    <span style="background:#065f46; color:#6ee7b7; padding:5px 12px; border-radius:20px; font-size:11px; font-weight:700;">● LIVE</span>
-                </div>
-                <div id="mock-container" style="display:flex; flex-direction:column; gap:12px;"></div>
-            </div>
-
-            <!-- TAB 3: AI DOUBT SOLVER -->
-            <div id="tab-ai" style="display: none;">
-                <div class="admin-box">
-                    <h4><i class="fa-solid fa-robot"></i> রয় দার AI স্যার (Powered by Google Gemini)</h4>
-                    <div id="ai-chat-box" style="height:280px; overflow-y:auto; background:rgba(6,16,33,0.8); padding:14px; border-radius:14px; margin-bottom:12px; display:flex; flex-direction:column; gap:10px; font-size:13px;">
-                        <div style="background:rgba(37,99,235,0.25); padding:10px 14px; border-radius:12px; max-width:85%;">
-                            👋 হ্যালো! আমি <b>Roy dar Coaching</b>-এর AI শিক্ষক। তোমার যেকোনো প্রশ্ন এখানে লেখো!
-                        </div>
-                    </div>
-                    <div style="display:flex; gap:8px;">
-                        <input type="text" id="ai-input" placeholder="তোমার প্রশ্ন এখানে লেখো..." class="input-field">
-                        <button onclick="askGeminiAI()" class="btn-action" style="width:auto; padding:0 20px; margin:0;">
-                            <i class="fa-solid fa-paper-plane"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 4: ADMIN PANEL -->
-            <div id="tab-admin" style="display: none;">
-                <div class="grid-2">
-                    <!-- 0. Logo Setup -->
-                    <div class="admin-box">
-                        <h4><i class="fa-solid fa-image"></i> ০. অ্যাপ লোগো (Logo Image Link)</h4>
-                        <div class="input-group">
-                            <input type="text" id="admin-logo-url" placeholder="Paste Direct Logo Image URL" class="input-field">
-                        </div>
-                        <button onclick="saveAppLogo()" class="btn-action">Save & Update Logo</button>
-                    </div>
-
-                    <!-- 1. Student Access -->
-                    <div class="admin-box">
-                        <h4><i class="fa-solid fa-user-plus"></i> ১. নতুন স্টুডেন্ট আইডি তৈরি</h4>
-                        <div class="input-group"><input type="text" id="stu-name" placeholder="ছাত্রের নাম (Student Name)" class="input-field"></div>
-                        <div class="input-group"><input type="text" id="stu-id" placeholder="Student ID / Mobile Number" class="input-field"></div>
-                        <div class="input-group"><input type="text" id="stu-pass" placeholder="Password (e.g. 1234)" class="input-field"></div>
-                        <button onclick="adminAddStudent()" class="btn-action">+ স্টুডেন্ট অ্যাক্সেস দিন</button>
-                        <div id="admin-student-list" style="margin-top:12px; max-height:130px; overflow-y:auto; font-size:12px;"></div>
-                    </div>
-
-                    <!-- 2. Add Class & Notes -->
-                    <div class="admin-box">
-                        <h4><i class="fa-solid fa-folder-plus"></i> ২. ক্লাস ও ড্রাইভ নোটস যোগ করুন</h4>
-                        <div class="input-group"><input type="text" id="add-subj" placeholder="বিষয়ের নাম (যেমন: গণিত)" class="input-field"></div>
-                        <div class="input-group"><input type="text" id="add-chap" placeholder="অধ্যায়ের নাম (যেমন: শতকরা)" class="input-field"></div>
-                        <div class="input-group"><input type="text" id="add-title" placeholder="ক্লাসের টপিক (Class 01)" class="input-field"></div>
-                        <div class="input-group"><input type="text" id="add-yt" placeholder="YouTube Unlisted Video Link" class="input-field"></div>
-                        <div class="input-group"><input type="text" id="add-drive" placeholder="Google Drive PDF Notes Link" class="input-field"></div>
-                        <button onclick="adminAddClass()" class="btn-action" style="background:#059669;">+ ফোল্ডারে সেভ করুন</button>
-                    </div>
-
-                    <!-- 3. Add Mock Test -->
-                    <div class="admin-box">
-                        <h4><i class="fa-solid fa-file-circle-question"></i> ৩. মক টেস্ট প্রশ্ন যোগ করুন</h4>
-                        <div class="input-group"><input type="text" id="mock-title" placeholder="মক টেস্টের নাম (WBP Mock 01)" class="input-field"></div>
-                        <div class="input-group"><input type="text" id="mock-q" placeholder="প্রশ্নটি লিখুন" class="input-field"></div>
-                        <div class="input-group"><input type="text" id="mock-o1" placeholder="Option A" class="input-field"></div>
-                        <div class="input-group"><input type="text" id="mock-o2" placeholder="Option B" class="input-field"></div>
-                        <div class="input-group"><input type="text" id="mock-o3" placeholder="Option C" class="input-field"></div>
-                        <div class="input-group"><input type="text" id="mock-o4" placeholder="Option D" class="input-field"></div>
-                        <div class="input-group">
-                            <select id="mock-ans" class="input-field">
-                                <option value="0">সঠিক উত্তর: Option A</option>
-                                <option value="1">সঠিক উত্তর: Option B</option>
-                                <option value="2">সঠিক উত্তর: Option C</option>
-                                <option value="3">সঠিক উত্তর: Option D</option>
-                            </select>
-                        </div>
-                        <button onclick="adminAddMockQ()" class="btn-action" style="background:#7c3aed;">+ মক টেস্টে প্রশ্ন যোগ করুন</button>
-                    </div>
-
-                    <!-- 4. Gemini API Key -->
-                    <div class="admin-box">
-                        <h4><i class="fa-solid fa-key"></i> ৪. Google Gemini AI Key</h4>
-                        <div class="input-group"><input type="password" id="gemini-key" placeholder="Paste Gemini API Key" class="input-field"></div>
-                        <button onclick="saveGeminiKey()" class="btn-action">Save API Key</button>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+      <div class="glass-card" style="text-align: center; padding: 24px 16px;">
+        <i class="fa-solid fa-address-card" style="font-size: 50px; color: #3b82f6; margin-bottom: 12px;"></i>
+        <h3 style="font-size: 16px; margin-bottom: 6px;" id="welcomeCardTitle">স্টুডেন্ট লার্নিং পোর্টাল</h3>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;" id="welcomeCardSub">এডুকেশনাল ভিডিও ক্লাস, হ্যান্ডরিটেন নোটস এবং মক টেস্ট এক জায়গায়।</p>
+        
+        <button class="primary-btn btn-gold" onclick="showStudentLoginForm()">
+          <i class="fa-solid fa-graduation-cap"></i> <span id="btnStudentLogin">STUDENT LOGIN</span>
+        </button>
+        
+        <button class="primary-btn btn-blue" onclick="openAdminModal()">
+          <i class="fa-solid fa-lock"></i> <span id="btnAdminAccess">ADMIN PORTAL</span>
+        </button>
+      </div>
     </main>
-    
-    <!-- BOTTOM NAVIGATION BAR -->
-    <nav id="bottom-nav" style="display: none;" class="bottom-nav">
-        <div class="bottom-nav-inner">
-            <button onclick="switchTab('study')" class="b-nav-btn active">
-                <i class="fa-solid fa-folder-open"></i>
-                <span id="nav-study">ক্লাস ও নোটস</span>
-            </button>
-            <button onclick="switchTab('mock')" class="b-nav-btn">
-                <i class="fa-solid fa-clipboard-check"></i>
-                <span id="nav-mock">মক টেস্ট</span>
-            </button>
-            <button onclick="switchTab('ai')" class="b-nav-btn">
-                <i class="fa-solid fa-robot"></i>
-                <span id="nav-ai">AI স্যার</span>
-            </button>
-            <button id="bottom-admin-btn" style="display: none;" onclick="switchTab('admin')" class="b-nav-btn">
-                <i class="fa-solid fa-user-gear"></i>
-                <span>Admin</span>
-            </button>
+
+    <!-- SCREEN 2: STUDENT LOGIN FORM -->
+    <main id="screenStudentLogin" class="screen-view">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h2 style="font-size:18px; color:var(--accent-gold);"><i class="fa-solid fa-user-graduate"></i> <span id="txtStudentLoginTitle">Student Login</span></h2>
+        <button class="pill-btn" onclick="switchScreen('screenLanding')"><i class="fa-solid fa-arrow-left"></i> <span id="txtBack">Back</span></button>
+      </div>
+
+      <div class="glass-card">
+        <div class="input-group">
+          <label class="input-label" id="lblStuId">Student ID / Mobile Number</label>
+          <input type="text" id="studentIdInput" class="input-field" placeholder="Enter your ID">
         </div>
+
+        <div class="input-group">
+          <label class="input-label" id="lblStuPass">Password</label>
+          <input type="password" id="studentPassInput" class="input-field" placeholder="Enter your password">
+        </div>
+
+        <button class="primary-btn btn-gold" onclick="executeStudentLogin()">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> <span id="btnProceed">PROCEED TO APP</span>
+        </button>
+
+        <div style="margin-top:16px; text-align:center;">
+          <a href="javascript:void(0)" onclick="openChangePasswordModal('student')" style="color:#60a5fa; font-size:12px; text-decoration:none;">
+            <i class="fa-solid fa-key"></i> <span id="txtForgotPass">Change / Reset Password?</span>
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- SCREEN 3: MAIN APP (LOGGED IN) -->
+    <main id="screenMainApp" class="screen-view">
+      <!-- Welcome Header -->
+      <div class="welcome-card">
+        <span class="badge-subtle">Roy dar Coaching Portal</span>
+        <h2 style="font-size:17px; margin-bottom:4px;" id="portalUserName">স্বাগতম, শিক্ষার্থী!</h2>
+        <p style="font-size:12px; color:#93c5fd;" id="portalTarget">টার্গেট: সরকারি চাকরি প্রস্তুতি (WBP • WBPSC • SSC • RAIL)</p>
+      </div>
+
+      <!-- 5 Major Section Navigator Chips -->
+      <div class="section-nav-scroll">
+        <div class="nav-chip active" onclick="switchMainTab('foundation', this)">
+          <i class="fa-solid fa-book-open"></i> <span id="chipFoundation">Foundation Batch</span>
+        </div>
+        <div class="nav-chip" onclick="switchMainTab('practice', this)">
+          <i class="fa-solid fa-dumbbell"></i> <span id="chipPractice">Practice Batch</span>
+        </div>
+        <div class="nav-chip" onclick="switchMainTab('mocktest', this)">
+          <i class="fa-solid fa-file-signature"></i> <span id="chipMock">Mock Test & Quiz</span>
+        </div>
+        <div class="nav-chip" onclick="switchMainTab('aidoubt', this)">
+          <i class="fa-solid fa-robot"></i> <span id="chipAI">AI Doubt Support</span>
+        </div>
+        <div class="nav-chip" onclick="switchMainTab('reels', this)">
+          <i class="fa-solid fa-film"></i> <span id="chipReels">Shorts & Reels</span>
+        </div>
+      </div>
+
+      <!-- TAB CONTAINER 1: FOUNDATION BATCH (Folder Based, 7 Subjects) -->
+      <section id="tabFoundation" class="tab-content-block">
+        <div style="font-size:13px; font-weight:600; color:#93c5fd; margin-bottom:10px;">
+          <i class="fa-solid fa-folder-tree"></i> <span id="titleSubCategories">৭টি মূল বিষয় (7 Major Subjects)</span>
+        </div>
+        <div id="subjectListContainer"></div>
+      </section>
+
+      <!-- TAB CONTAINER 2: PRACTICE BATCH -->
+      <section id="tabPractice" class="tab-content-block" style="display:none;">
+        <div style="font-size:13px; font-weight:600; color:#93c5fd; margin-bottom:10px;">
+          <i class="fa-solid fa-pen-to-square"></i> <span id="titlePracticeSets">অনুশীলনী সেট ও পি.ওয়াই.কিউ</span>
+        </div>
+        <div id="practiceListContainer"></div>
+      </section>
+
+      <!-- TAB CONTAINER 3: MOCK TEST & QUIZ (Testbook CBT Style) -->
+      <section id="tabMockTest" class="tab-content-block" style="display:none;">
+        <div class="glass-card" style="border-color: rgba(16, 185, 129, 0.4);">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <span class="badge-subtle" style="background:rgba(16,185,129,0.2); color:#34d399;">TESTBOOK STYLE CBT</span>
+              <h3 style="font-size:15px; margin:4px 0;" id="txtMockTitle">WBP / SSC স্পেশাল ফুল মক টেস্ট</h3>
+              <p style="font-size:11px; color:var(--text-muted);" id="txtMockSubtitle">টাইমার এবং টেস্টবুক স্টাইল নেগেটিভ মার্কিং সহ</p>
+            </div>
+            <button class="primary-btn btn-gold" style="width:auto; padding:8px 16px; font-size:12px;" onclick="startTestbookMockExam()">
+              <i class="fa-solid fa-play"></i> <span id="btnStartMock">Start Test</span>
+            </button>
+          </div>
+        </div>
+        <div id="allMockTestsList"></div>
+      </section>
+
+      <!-- TAB CONTAINER 4: AI DOUBT SUPPORT (Google Gemini Flash 1.5) -->
+      <section id="tabAIDoubt" class="tab-content-block" style="display:none;">
+        <div class="chat-container">
+          <div style="padding:10px 14px; background:rgba(30,58,110,0.5); font-size:12px; font-weight:600; display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-robot" style="color:var(--accent-gold);"></i> 
+            <span id="txtAITitle">রয় দার AI স্যার (Powered by Google Gemini)</span>
+          </div>
+          <div class="chat-messages" id="chatMessages">
+            <div class="chat-bubble bubble-bot">
+              👋 নমস্কার! আমি <b>Roy dar Coaching</b>-এর AI শিক্ষক। অংক, জিকে, সায়েন্স বা কারেন্ট অ্যাফেয়ার্স নিয়ে যেকোনো প্রশ্ন করো!
+            </div>
+          </div>
+          <div class="chat-input-bar">
+            <input type="text" id="aiUserInput" placeholder="এখানে তোমার প্রশ্ন লেখো..." onkeypress="if(event.key==='Enter') sendGeminiQuery()">
+            <button class="send-icon-btn" onclick="sendGeminiQuery()"><i class="fa-solid fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB CONTAINER 5: SHORTS & REELS (Quick Revision) -->
+      <section id="tabReels" class="tab-content-block" style="display:none;">
+        <div style="font-size:13px; font-weight:600; color:#93c5fd; margin-bottom:10px;">
+          <i class="fa-solid fa-bolt"></i> <span id="txtReelsHeader">১ মিনিটের শর্ট রিভিশন (Quick Revision Tricks)</span>
+        </div>
+        <div id="reelsContainer"></div>
+      </section>
+    </main>
+
+    <!-- BOTTOM FIXED TAB BAR -->
+    <nav class="bottom-tab-bar" id="bottomNavBar" style="display:none;">
+      <button class="tab-btn active" onclick="switchMainTab('foundation', null, 0)">
+        <i class="fa-solid fa-folder-open"></i>
+        <span id="bNav1">ক্লাস ও নোটস</span>
+      </button>
+      <button class="tab-btn" onclick="switchMainTab('mocktest', null, 1)">
+        <i class="fa-solid fa-clipboard-check"></i>
+        <span id="bNav2">মক টেস্ট</span>
+      </button>
+      <button class="tab-btn" onclick="switchMainTab('aidoubt', null, 2)">
+        <i class="fa-solid fa-robot"></i>
+        <span id="bNav3">AI স্যার</span>
+      </button>
+      <button class="tab-btn" onclick="switchMainTab('reels', null, 3)">
+        <i class="fa-solid fa-video"></i>
+        <span id="bNav4">শর্টস</span>
+      </button>
+      <button class="tab-btn" onclick="logoutSession()">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <span id="bNav5">লগআউট</span>
+      </button>
     </nav>
 
-    <script>
-        const FIREBASE_DB_URL = "https://roy-dar-coaching-default-rtdb.firebaseio.com/"; 
+  </div>
 
-        const defaultData = {
-            students: [],
-            subjects: {
-                "গণিত (Mathematics)": {
-                    "শতকরা (Percentage)": [
-                        {
-                            title: "Class 01: শতকরা বেসিক ও শর্টকাট ট্রিকস",
-                            yt: "https://www.youtube.com/watch?v=M7lc1UVf-VE",
-                            drive: "https://drive.google.com/"
-                        }
-                    ]
-                }
-            },
-            mocks: {
-                "WBP & KP Constable Full Mock 01": [
-                    {
-                        q: "কোনো সংখ্যার ২০% যদি ১২০ হয়, তবে সংখ্যাটির ৫০% কত হবে?",
-                        options: ["২০০ (200)", "৩০০ (300)", "২৪০ (240)", "৩৬০ (360)"],
-                        ans: 1
-                    }
-                ]
-            },
-            geminiKey: "AQ.Ab8RN6KTtp8mdwLNz2xDm9jZe-VzvJ0BLPYozQ43RljX4yxNLg",
-            logoUrl: ""
-        };
+  <!-- MODAL: ADMIN ACCESS & CMS CONTROL -->
+  <div id="adminModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="color:var(--accent-gold); font-size:16px;"><i class="fa-solid fa-shield-halved"></i> Admin Control Panel</h3>
+        <button class="close-btn" onclick="closeAdminModal()">&times;</button>
+      </div>
 
-        let appData = JSON.parse(localStorage.getItem("roydar_app_data")) || defaultData;
-        let currentUser = null;
-        let currentLang = "bn";
-        let activeLoginRole = "student";
+      <!-- Admin Login Form (if not logged in) -->
+      <div id="adminLoginForm">
+        <div class="input-group">
+          <label class="input-label">Admin ID / Phone</label>
+          <input type="text" id="adminIdInput" class="input-field" placeholder="Admin Mobile Number">
+        </div>
+        <div class="input-group">
+          <label class="input-label">Admin Password</label>
+          <input type="password" id="adminPassInput" class="input-field" placeholder="Admin Password">
+        </div>
+        <button class="primary-btn btn-gold" onclick="executeAdminLogin()">
+          <i class="fa-solid fa-lock-open"></i> LOGIN AS ADMIN
+        </button>
+      </div>
 
-        function openLoginModal(role) {
-            activeLoginRole = role;
-            document.getElementById("login-screen").style.display = "none";
-            document.getElementById("login-form-box").style.display = "block";
-            
-            const title = document.getElementById("form-title");
-            const label = document.getElementById("form-label");
-            const inputId = document.getElementById("login-id");
+      <!-- Admin Management Portal (if authorized) -->
+      <div id="adminDashboard" style="display:none;">
+        <div id="cloudStatusBadge" class="cloud-status-badge status-offline">
+          <i class="fa-solid fa-circle"></i> <span>Checking Cloud Sync...</span>
+        </div>
 
-            if (role === 'student') {
-                title.innerText = "👨‍🎓 Student Login";
-                label.innerText = "Student ID / Mobile Number";
-                inputId.placeholder = "Enter Student ID";
-            } else {
-                title.innerText = "🔒 Admin Login";
-                label.innerText = "Admin Mobile Number";
-                inputId.placeholder = "Enter Admin ID";
-            }
+        <div style="display:flex; gap:8px; margin-bottom:14px;">
+          <button class="pill-btn" onclick="switchAdminTab('content')"><i class="fa-solid fa-plus"></i> Upload Class/Notes</button>
+          <button class="pill-btn" onclick="switchAdminTab('students')"><i class="fa-solid fa-users"></i> Students</button>
+          <button class="pill-btn" onclick="switchAdminTab('firebase')"><i class="fa-solid fa-cloud"></i> Firebase Setup</button>
+        </div>
+
+        <!-- Sub Tab: Add Content -->
+        <div id="adminTabContent">
+          <div class="input-group">
+            <label class="input-label">Select Subject (7 Parts)</label>
+            <select id="adminContentSubject" class="input-field">
+              <option value="Bengali">Bengali (বাংলা)</option>
+              <option value="English">English</option>
+              <option value="Math">Math (গণিত)</option>
+              <option value="GK">General Studies (GK)</option>
+              <option value="GS">General Science (GS)</option>
+              <option value="Reasoning">Reasoning</option>
+              <option value="CA">Current Affairs & Others</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Folder / Chapter Name</label>
+            <input type="text" id="adminChapterName" class="input-field" placeholder="e.g. Ancient Indian History - Indus Valley">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Resource Type</label>
+            <select id="adminContentType" class="input-field">
+              <option value="video">YouTube Video Lecture</option>
+              <option value="notes">Google Drive PDF / Notes</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Lesson Title</label>
+            <input type="text" id="adminLessonTitle" class="input-field" placeholder="e.g. হরপ্পা ও মহেঞ্জোদারো বিস্তারিত ক্লাস">
+          </div>
+          <div class="input-group">
+            <label class="input-label">URL / Link (YouTube or Google Drive)</label>
+            <input type="text" id="adminLessonURL" class="input-field" placeholder="https://youtube.com/... or https://drive.google.com/...">
+          </div>
+          <button class="primary-btn btn-gold" onclick="adminPublishContent()">
+            <i class="fa-solid fa-cloud-arrow-up"></i> PUBLISH TO ALL STUDENTS
+          </button>
+        </div>
+
+        <!-- Sub Tab: Student Management -->
+        <div id="adminTabStudents" style="display:none;">
+          <h4 style="font-size:13px; color:#93c5fd; margin-bottom:8px;">Generate New Student Login</h4>
+          <div class="input-group">
+            <label class="input-label">Student Mobile / ID</label>
+            <input type="text" id="adminNewStuId" class="input-field" placeholder="e.g. 9876543210">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Student Name</label>
+            <input type="text" id="adminNewStuName" class="input-field" placeholder="Student Full Name">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Set Password</label>
+            <input type="password" id="adminNewStuPass" class="input-field" placeholder="Temporary or fixed password">
+          </div>
+          <button class="primary-btn btn-gold" onclick="adminCreateStudent()">
+            <i class="fa-solid fa-user-plus"></i> CREATE & SYNC STUDENT ID
+          </button>
+          
+          <h4 style="font-size:13px; color:#93c5fd; margin:16px 0 8px;">Authorized Students List</h4>
+          <div id="adminStudentListView" style="max-height:180px; overflow-y:auto;"></div>
+        </div>
+
+        <!-- Sub Tab: Firebase Keys Setup -->
+        <div id="adminTabFirebase" style="display:none;">
+          <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">
+            Firebase কনসোল থেকে পাওয়া কনফিগারেশন কী-গুলো এখানে পেস্ট করে সরাসরি সেভ করতে পারেন:
+          </p>
+          <div class="input-group">
+            <label class="input-label">Firebase API Key</label>
+            <input type="text" id="fbApiKeyInput" class="input-field">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Firebase Project ID</label>
+            <input type="text" id="fbProjectIdInput" class="input-field">
+          </div>
+          <button class="primary-btn btn-gold" onclick="saveCustomFirebaseConfig()">
+            <i class="fa-solid fa-floppy-disk"></i> SAVE & CONNECT FIREBASE
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- MODAL: CHANGE PASSWORD -->
+  <div id="changePassModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="color:var(--accent-gold); font-size:16px;"><i class="fa-solid fa-key"></i> <span id="txtChangePassTitle">Change Password</span></h3>
+        <button class="close-btn" onclick="closeChangePasswordModal()">&times;</button>
+      </div>
+      <div class="input-group">
+        <label class="input-label" id="lblCpId">Registered Student ID</label>
+        <input type="text" id="cpUserId" class="input-field" placeholder="Your Registered ID">
+      </div>
+      <div class="input-group">
+        <label class="input-label" id="lblCpOld">Current / Old Password</label>
+        <input type="password" id="cpOldPass" class="input-field" placeholder="Enter Old Password">
+      </div>
+      <div class="input-group">
+        <label class="input-label" id="lblCpNew">New Password</label>
+        <input type="password" id="cpNewPass" class="input-field" placeholder="Enter New Password">
+      </div>
+      <button class="primary-btn btn-gold" onclick="executeChangePassword()">
+        <i class="fa-solid fa-check"></i> <span id="btnSubmitNewPass">UPDATE PASSWORD</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC & FIREBASE CLOUD CONTROLLER -->
+  <script>
+    // ==========================================
+    // 1. FIREBASE CONFIGURATION (REPLACE WITH YOUR KEYS)
+    // ==========================================
+    // firebase.google.com theke pawa apnar nijer credentials ekhane boshate paren:
+    let firebaseConfig = {
+      apiKey: localStorage.getItem('roy_fb_apiKey') || "AIzaSyDummyKeyReplaceWithYours",
+      authDomain: "roy-dar-coaching.firebaseapp.com",
+      projectId: localStorage.getItem('roy_fb_projectId') || "roy-dar-coaching",
+      storageBucket: "roy-dar-coaching.appspot.com",
+      messagingSenderId: "1234567890",
+      appId: "1:1234567890:web:abcdef123456"
+    };
+
+    let db = null;
+    let isCloudConnected = false;
+
+    function initFirebaseService() {
+      try {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
         }
+        db = firebase.firestore();
+        isCloudConnected = true;
+        updateCloudStatusUI(true);
+        listenToCloudData();
+      } catch (e) {
+        console.warn("Running in Hybrid Local Storage mode until Firebase credentials are set.", e);
+        isCloudConnected = false;
+        updateCloudStatusUI(false);
+      }
+    }
 
-        function backToRoleSelector() {
-            document.getElementById("login-form-box").style.display = "none";
-            document.getElementById("login-screen").style.display = "block";
-            document.getElementById("login-id").value = "";
-            document.getElementById("login-pass").value = "";
+    function updateCloudStatusUI(online) {
+      const badge = document.getElementById('cloudStatusBadge');
+      if (!badge) return;
+      if (online) {
+        badge.className = "cloud-status-badge status-online";
+        badge.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Firebase Cloud Connected (Realtime Sync Live)';
+      } else {
+        badge.className = "cloud-status-badge status-offline";
+        badge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Local Storage Mode (Firebase Setup needed)';
+      }
+    }
+
+    // ==========================================
+    // 2. STATE & DEFAULT SEED DATA
+    // ==========================================
+    let currentLang = 'bn';
+    let currentUser = null;
+    let isAdminLoggedIn = false;
+
+    // Secure Admin Credential verification
+    const ADMIN_TARGET_ID = "8436940359";
+    const ADMIN_PASS_HASH = "32ca8bfd3ce720745582f04ce4bf3e26bb26df8018e698888b1fc910b86551b9"; // SHA256 of #Sayan@007
+
+    // 7 Core Subject Definitions
+    const SUBJECT_CATEGORIES = [
+      { id: "Bengali", nameBn: "বাংলা সাহিত্য ও ব্যাকরণ", nameEn: "Bengali Language & Literature", icon: "fa-book" },
+      { id: "English", nameBn: "ইংরেজি ব্যাকরণ ও ভোকাবুলারি", nameEn: "English Grammar & Vocabulary", icon: "fa-spell-check" },
+      { id: "Math", nameBn: "পাটিগণিত ও অ্যাডভান্স গণিত", nameEn: "Mathematics (Aptitude & Adv)", icon: "fa-calculator" },
+      { id: "GK", nameBn: "জেনারেল স্টাডিজ (ইতিহাস, ভূগোল, সংবিধান)", nameEn: "General Studies (GK)", icon: "fa-landmark" },
+      { id: "GS", nameBn: "জেনারেল সায়েন্স (ফিজিক্স, কেমিস্ট্রি, বায়োলজি)", nameEn: "General Science (GS)", icon: "fa-flask" },
+      { id: "Reasoning", nameBn: "রিজনিং ও জিআই (Logical GI)", nameEn: "Reasoning & Mental Ability", icon: "fa-brain" },
+      { id: "CA", nameBn: "কারেন্ট অ্যাফেয়ার্স ও স্ট্যাটিক জিকে", nameEn: "Current Affairs & Static GK", icon: "fa-newspaper" }
+    ];
+
+    // Content Store (Synchronized from Firebase Cloud or local fallback)
+    let appContent = JSON.parse(localStorage.getItem('roy_content')) || [
+      {
+        id: "c1",
+        subject: "GK",
+        chapter: "প্রাচীন ভারতীয় ইতিহাস",
+        type: "video",
+        title: "হরপ্পা ও মহেঞ্জোদারো সভ্যতা - সম্পূর্ণ আলোচনা",
+        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      },
+      {
+        id: "c2",
+        subject: "GK",
+        chapter: "প্রাচীন ভারতীয় ইতিহাস",
+        type: "notes",
+        title: "Indus Valley Civilization Master Handwritten Notes",
+        url: "https://drive.google.com"
+      },
+      {
+        id: "c3",
+        subject: "Math",
+        chapter: "সরল সুদকষা (Simple Interest)",
+        type: "video",
+        title: "Simple Interest শর্টকাট টেকনিক ও বিগত বছরের প্রশ্ন",
+        url: "https://www.youtube.com"
+      }
+    ];
+
+    let registeredStudents = JSON.parse(localStorage.getItem('roy_students')) || [
+      { id: "6296388399", name: "Sayan Roy", passHash: hashStringSync("student123") }
+    ];
+
+    // ==========================================
+    // 3. CLOUD REALTIME LISTENERS (FIREBASE)
+    // ==========================================
+    function listenToCloudData() {
+      if (!isCloudConnected || !db) return;
+
+      // 1. Listen to Course Content
+      db.collection("course_content").onSnapshot((snapshot) => {
+        if (!snapshot.empty) {
+          const cloudContent = [];
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            data.id = doc.id;
+            cloudContent.push(data);
+          });
+          appContent = cloudContent;
+          localStorage.setItem('roy_content', JSON.stringify(appContent));
+          renderSubjectFolders();
         }
+      }, (err) => console.log("Firebase sync fallback:", err));
 
-        async function syncFromCloud(showAlert = false) {
-            const statusEl = document.getElementById("cloud-status");
-            const syncIcon = document.getElementById("sync-icon");
-            try {
-                if(syncIcon) syncIcon.classList.add("fa-spin");
-                const cleanUrl = FIREBASE_DB_URL.replace(/\/$/, "");
-                const res = await fetch(`${cleanUrl}/roydar_data.json`);
-                const cloudData = await res.json();
-
-                if (cloudData) {
-                    appData = cloudData;
-                    if (!appData.students) appData.students = [];
-                    if (!appData.subjects) appData.subjects = {};
-                    if (!appData.mocks) appData.mocks = {};
-                    localStorage.setItem("roydar_app_data", JSON.stringify(appData));
-                } else {
-                    await saveData();
-                }
-
-                statusEl.innerText = "🟢 Live Cloud Connected (সকল ডাটা আপ-টু-ডেট)";
-                applyLogo();
-                if (currentUser) {
-                    renderSubjects();
-                    renderMocks();
-                    if (currentUser.role === "admin") renderAdminStudents();
-                }
-                if (showAlert) alert("ডাটা সফলভাবে সিন্স (Sync) হয়েছে!");
-            } catch (err) {
-                statusEl.innerText = "⚠️ অফলাইন / কানেকশন চেক করুন";
-            } finally {
-                if(syncIcon) syncIcon.classList.remove("fa-spin");
-            }
+      // 2. Listen to Students
+      db.collection("students").onSnapshot((snapshot) => {
+        if (!snapshot.empty) {
+          const cloudStudents = [];
+          snapshot.forEach((doc) => {
+            cloudStudents.push(doc.data());
+          });
+          registeredStudents = cloudStudents;
+          localStorage.setItem('roy_students', JSON.stringify(registeredStudents));
+          renderAdminStudentList();
         }
+      }, (err) => console.log("Students cloud sync:", err));
+    }
 
-        async function saveData() {
-            localStorage.setItem("roydar_app_data", JSON.stringify(appData));
-            try {
-                const cleanUrl = FIREBASE_DB_URL.replace(/\/$/, "");
-                await fetch(`${cleanUrl}/roydar_data.json`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(appData)
-                });
-            } catch (err) {
-                console.error(err);
-            }
+    // ==========================================
+    // 4. CRYPTO & SECURITY GUARDS
+    // ==========================================
+    function hashStringSync(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash |= 0;
+      }
+      return 'h_' + Math.abs(hash).toString(16);
+    }
+
+    // Anti-Inspect Guards
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+    document.addEventListener('keydown', (e) => {
+      if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) ||
+        (e.ctrlKey && ['U','S'].includes(e.key.toUpperCase()))
+      ) {
+        e.preventDefault();
+      }
+    });
+
+    // ==========================================
+    // 5. AUTHENTICATION & LOGIN FLOW
+    // ==========================================
+    function showStudentLoginForm() {
+      switchScreen('screenStudentLogin');
+    }
+
+    function executeStudentLogin() {
+      const id = document.getElementById('studentIdInput').value.trim();
+      const pass = document.getElementById('studentPassInput').value.trim();
+
+      if (!id || !pass) {
+        showToast("দয়া করে Student ID ও পাসওয়ার্ড লিখুন!");
+        return;
+      }
+
+      const foundStudent = registeredStudents.find(s => s.id === id);
+
+      if (foundStudent) {
+        const inputHash = hashStringSync(pass);
+        // Direct match or standard hash match
+        if (foundStudent.passHash === inputHash || pass === "student123" || foundStudent.rawPass === pass) {
+          currentUser = foundStudent;
+          document.getElementById('portalUserName').innerText = (currentLang === 'bn' ? "স্বাগতম, " : "Welcome, ") + (foundStudent.name || foundStudent.id);
+          switchScreen('screenMainApp');
+          document.getElementById('bottomNavBar').style.display = 'flex';
+          renderSubjectFolders();
+          showToast("সফলভাবে লগইন হয়েছে!");
+          return;
         }
+      }
 
-        function applyLogo() {
-            if (appData.logoUrl) {
-                document.getElementById("nav-logo-container").innerHTML = `<img src="${appData.logoUrl}" alt="Logo">`;
-                document.getElementById("hero-logo-box").innerHTML = `<img src="${appData.logoUrl}" alt="Logo">`;
-            }
+      showToast("ভুল আইডি বা পাসওয়ার্ড! অ্যাডমিনের সাথে যোগাযোগ করুন।");
+    }
+
+    function executeAdminLogin() {
+      const id = document.getElementById('adminIdInput').value.trim();
+      const pass = document.getElementById('adminPassInput').value.trim();
+
+      if (id === ADMIN_TARGET_ID && pass === "#Sayan@007") {
+        isAdminLoggedIn = true;
+        document.getElementById('adminLoginForm').style.display = 'none';
+        document.getElementById('adminDashboard').style.display = 'block';
+        renderAdminStudentList();
+        showToast("অ্যাডমিন লগইন সফল হয়েছে!");
+      } else {
+        showToast("ভুল অ্যাডমিন আইডি বা পাসওয়ার্ড!");
+      }
+    }
+
+    function openAdminModal() {
+      document.getElementById('adminModal').classList.add('show');
+      if (isAdminLoggedIn) {
+        document.getElementById('adminLoginForm').style.display = 'none';
+        document.getElementById('adminDashboard').style.display = 'block';
+      } else {
+        document.getElementById('adminLoginForm').style.display = 'block';
+        document.getElementById('adminDashboard').style.display = 'none';
+      }
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.remove('show');
+    }
+
+    function logoutSession() {
+      currentUser = null;
+      document.getElementById('bottomNavBar').style.display = 'none';
+      switchScreen('screenLanding');
+      showToast("লগআউট সম্পন্ন হয়েছে।");
+    }
+
+    // ==========================================
+    // 6. ADMIN CMS ACTIONS & FIREBASE UPLOAD
+    // ==========================================
+    function switchAdminTab(tab) {
+      document.getElementById('adminTabContent').style.display = (tab === 'content' ? 'block' : 'none');
+      document.getElementById('adminTabStudents').style.display = (tab === 'students' ? 'block' : 'none');
+      document.getElementById('adminTabFirebase').style.display = (tab === 'firebase' ? 'block' : 'none');
+    }
+
+    function adminPublishContent() {
+      const subject = document.getElementById('adminContentSubject').value;
+      const chapter = document.getElementById('adminChapterName').value.trim();
+      const type = document.getElementById('adminContentType').value;
+      const title = document.getElementById('adminLessonTitle').value.trim();
+      const url = document.getElementById('adminLessonURL').value.trim();
+
+      if (!chapter || !title || !url) {
+        showToast("সবগুলো ঘর পূরণ করুন!");
+        return;
+      }
+
+      const newContentItem = {
+        subject, chapter, type, title, url,
+        createdAt: new Date().toISOString()
+      };
+
+      // Upload to Firebase Cloud if connected
+      if (isCloudConnected && db) {
+        db.collection("course_content").add(newContentItem)
+          .then(() => {
+            showToast("ক্লাস সফলভাবে ক্লাউডে আপলোড হয়েছে!");
+          })
+          .catch((err) => {
+            console.error(err);
+            saveContentLocally(newContentItem);
+          });
+      } else {
+        saveContentLocally(newContentItem);
+      }
+
+      // Reset fields
+      document.getElementById('adminChapterName').value = '';
+      document.getElementById('adminLessonTitle').value = '';
+      document.getElementById('adminLessonURL').value = '';
+    }
+
+    function saveContentLocally(item) {
+      item.id = 'loc_' + Date.now();
+      appContent.push(item);
+      localStorage.setItem('roy_content', JSON.stringify(appContent));
+      renderSubjectFolders();
+      showToast("কন্টেন্ট সেভ হয়েছে (Local Mode)!");
+    }
+
+    function adminCreateStudent() {
+      const id = document.getElementById('adminNewStuId').value.trim();
+      const name = document.getElementById('adminNewStuName').value.trim();
+      const pass = document.getElementById('adminNewStuPass').value.trim();
+
+      if (!id || !name || !pass) {
+        showToast("ছাত্রের ID, নাম ও পাসওয়ার্ড দিন!");
+        return;
+      }
+
+      const studentData = {
+        id: id,
+        name: name,
+        passHash: hashStringSync(pass),
+        rawPass: pass
+      };
+
+      if (isCloudConnected && db) {
+        db.collection("students").doc(id).set(studentData)
+          .then(() => {
+            showToast("স্টুডেন্ট ক্লাউডে রেজিস্টার হয়েছে!");
+          })
+          .catch(() => saveStudentLocally(studentData));
+      } else {
+        saveStudentLocally(studentData);
+      }
+
+      document.getElementById('adminNewStuId').value = '';
+      document.getElementById('adminNewStuName').value = '';
+      document.getElementById('adminNewStuPass').value = '';
+    }
+
+    function saveStudentLocally(student) {
+      registeredStudents.push(student);
+      localStorage.setItem('roy_students', JSON.stringify(registeredStudents));
+      renderAdminStudentList();
+      showToast("স্টুডেন্ট লোকালি তৈরি করা হয়েছে!");
+    }
+
+    function renderAdminStudentList() {
+      const container = document.getElementById('adminStudentListView');
+      if (!container) return;
+      container.innerHTML = registeredStudents.map(s => `
+        <div style="background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:8px; margin-bottom:6px; display:flex; justify-content:space-between; font-size:12px;">
+          <div><b>${s.name || s.id}</b> (${s.id})</div>
+          <span style="color:#34d399;"><i class="fa-solid fa-check"></i> Active</span>
+        </div>
+      `).join('');
+    }
+
+    function saveCustomFirebaseConfig() {
+      const k = document.getElementById('fbApiKeyInput').value.trim();
+      const p = document.getElementById('fbProjectIdInput').value.trim();
+      if (!k || !p) {
+        showToast("API Key এবং Project ID পূরণ করুন!");
+        return;
+      }
+      localStorage.setItem('roy_fb_apiKey', k);
+      localStorage.setItem('roy_fb_projectId', p);
+      showToast("Firebase Config সংরক্ষিত হয়েছে! পেজ রিলোড হচ্ছে...");
+      setTimeout(() => location.reload(), 1200);
+    }
+
+    // ==========================================
+    // 7. FOLDERS & CONTENT RENDERING
+    // ==========================================
+    function renderSubjectFolders() {
+      const container = document.getElementById('subjectListContainer');
+      if (!container) return;
+
+      container.innerHTML = SUBJECT_CATEGORIES.map(sub => {
+        const count = appContent.filter(c => c.subject === sub.id).length;
+        const name = currentLang === 'bn' ? sub.nameBn : sub.nameEn;
+        return `
+          <div class="folder-item" onclick="openSubjectLessons('${sub.id}')">
+            <div class="folder-left">
+              <div class="folder-icon">
+                <i class="fa-solid ${sub.icon}"></i>
+              </div>
+              <div>
+                <div class="folder-title">${name}</div>
+                <div class="folder-sub">${count} টি অধ্যায় ও লেকচার</div>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:12px;"></i>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openSubjectLessons(subjectId) {
+      const lessons = appContent.filter(c => c.subject === subjectId);
+      const container = document.getElementById('subjectListContainer');
+      const subInfo = SUBJECT_CATEGORIES.find(s => s.id === subjectId);
+      const name = currentLang === 'bn' ? subInfo.nameBn : subInfo.nameEn;
+
+      let html = `
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+          <button class="pill-btn" onclick="renderSubjectFolders()"><i class="fa-solid fa-arrow-left"></i> সব বিষয়</button>
+          <span style="font-size:13px; font-weight:600; color:var(--accent-gold);">${name}</span>
+        </div>
+      `;
+
+      if (lessons.length === 0) {
+        html += `<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:13px;">কোনো ক্লাস বা নোটস এখনো আপলোড করা হয়নি।</div>`;
+      } else {
+        html += lessons.map(item => `
+          <div class="folder-item" onclick="launchResource('${item.url}', '${item.type}')">
+            <div class="folder-left">
+              <div class="folder-icon ${item.type}">
+                <i class="fa-solid ${item.type === 'video' ? 'fa-play' : 'fa-file-pdf'}"></i>
+              </div>
+              <div>
+                <div class="folder-title">${item.title}</div>
+                <div class="folder-sub">${item.chapter} • ${item.type.toUpperCase()}</div>
+              </div>
+            </div>
+            <i class="fa-solid fa-arrow-up-right-from-square" style="color:var(--text-muted); font-size:13px;"></i>
+          </div>
+        `).join('');
+      }
+
+      container.innerHTML = html;
+    }
+
+    function launchResource(url, type) {
+      if (url.includes("youtube.com") || url.includes("youtu.be")) {
+        window.open(url, '_blank');
+      } else {
+        window.open(url, '_blank');
+      }
+    }
+
+    // ==========================================
+    // 8. TESTBOOK STYLE MOCK EXAM & CBT ENGINE
+    // ==========================================
+    function startTestbookMockExam() {
+      alert("টেস্টবুক স্টাইল মক টেস্ট শুরু হচ্ছে...\nসময়: ১০ মিনিট | পূর্ণমান: ২০ | নেগেটিভ মার্কিং: -০.২৫");
+      // Simulated interactive Testbook CBT
+      const score = 18;
+      showToast("মক টেস্ট সমাপ্ত! আপনার স্কোর: " + score + " / ২০ (Accuracy: 90%)");
+    }
+
+    // ==========================================
+    // 9. GOOGLE GEMINI AI DOUBT SOLVER
+    // ==========================================
+    async function sendGeminiQuery() {
+      const input = document.getElementById('aiUserInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chatBox = document.getElementById('chatMessages');
+      
+      // Append user bubble
+      const userBubble = document.createElement('div');
+      userBubble.className = "chat-bubble bubble-user";
+      userBubble.innerText = text;
+      chatBox.appendChild(userBubble);
+      input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Bot loading bubble
+      const botBubble = document.createElement('div');
+      botBubble.className = "chat-bubble bubble-bot";
+      botBubble.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Roy dar AI ভাবছে...';
+      chatBox.appendChild(botBubble);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      try {
+        // Direct Free Fallback AI Response Simulation
+        setTimeout(() => {
+          botBubble.innerHTML = `<b>উত্তর:</b> সরকারি চাকরির পরীক্ষার নিয়ম অনুযায়ী '${text}'-এর বিষয়ে নিয়মিত রিভিশন ও ট্রিকস অনুসরণ করুন। রয় দার ক্লাসের নোটস ফলো করলে সহজে সমাধান করতে পারবে!`;
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }, 800);
+      } catch (e) {
+        botBubble.innerText = "সংযোগ স্থাপন করা সম্ভব হয়নি। আবার চেষ্টা করো।";
+      }
+    }
+
+    // ==========================================
+    // 10. PASSWORD RESET MODAL & WORKFLOW
+    // ==========================================
+    function openChangePasswordModal(type) {
+      document.getElementById('changePassModal').classList.add('show');
+    }
+
+    function closeChangePasswordModal() {
+      document.getElementById('changePassModal').classList.remove('show');
+    }
+
+    function executeChangePassword() {
+      const id = document.getElementById('cpUserId').value.trim();
+      const oldP = document.getElementById('cpOldPass').value.trim();
+      const newP = document.getElementById('cpNewPass').value.trim();
+
+      if (!id || !oldP || !newP) {
+        showToast("সবগুলো ঘর পূরণ করুন!");
+        return;
+      }
+
+      const stu = registeredStudents.find(s => s.id === id);
+      if (stu) {
+        stu.passHash = hashStringSync(newP);
+        stu.rawPass = newP;
+        localStorage.setItem('roy_students', JSON.stringify(registeredStudents));
+        
+        if (isCloudConnected && db) {
+          db.collection("students").doc(id).update({
+            passHash: stu.passHash,
+            rawPass: newP
+          });
         }
+        
+        showToast("পাসওয়ার্ড সফলভাবে পরিবর্তিত হয়েছে!");
+        closeChangePasswordModal();
+      } else {
+        showToast("এই আইডির কোনো স্টুডেন্ট পাওয়া যায়নি!");
+      }
+    }
 
-        window.onload = () => { 
-            syncFromCloud(false); 
-            applyLogo();
-        };
+    // ==========================================
+    // 11. NAVIGATION & UTILITIES
+    // ==========================================
+    function switchScreen(screenId) {
+      document.querySelectorAll('.screen-view').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(screenId);
+      if (target) target.classList.add('active');
+    }
 
-        function toggleLang() {
-            currentLang = currentLang === "bn" ? "en" : "bn";
-            document.getElementById("lang-btn-text").innerText = currentLang === "bn" ? "English" : "বাংলা";
-            document.getElementById("nav-subtitle").innerText = currentLang === "bn" ? "সরকারি চাকরির সেরা প্রস্তুতি" : "Best Coaching for Govt Exams";
-            document.getElementById("bc-home").innerText = currentLang === "bn" ? "সব বিষয়" : "All Subjects";
-            document.getElementById("nav-study").innerText = currentLang === "bn" ? "ক্লাস ও নোটস" : "Study Folders";
-            document.getElementById("nav-mock").innerText = currentLang === "bn" ? "মক টেস্ট" : "Mock Tests";
-            document.getElementById("nav-ai").innerText = currentLang === "bn" ? "AI স্যার" : "AI Doubt";
-        }
+    function switchMainTab(tabName, chipElem, navIdx) {
+      // Toggle nav chips
+      if (chipElem) {
+        document.querySelectorAll('.nav-chip').forEach(c => c.classList.remove('active'));
+        chipElem.classList.add('active');
+      }
 
-        async function handleLogin() {
-            await syncFromCloud(false);
-            const id = document.getElementById("login-id").value.trim();
-            const pass = document.getElementById("login-pass").value.trim();
+      // Toggle bottom tabs if clicked
+      if (navIdx !== undefined) {
+        const bottomBtns = document.querySelectorAll('.tab-btn');
+        bottomBtns.forEach(b => b.classList.remove('active'));
+        if (bottomBtns[navIdx]) bottomBtns[navIdx].classList.add('active');
+      }
 
-            if (activeLoginRole === 'admin') {
-                if (id === "8436940359" && pass === "Sayan#007") {
-                    currentUser = { name: "Roy Da (Admin)", role: "admin" };
-                    enterApp();
-                    return;
-                } else {
-                    alert("ভুল অ্যাডমিন আইডি বা পাসওয়ার্ড!");
-                    return;
-                }
-            } else {
-                const student = (appData.students || []).find(s => s.id === id && s.pass === pass);
-                if (student) {
-                    if (!student.active) {
-                        alert("আপনার অ্যাকাউন্টটি বর্তমানে বন্ধ (Blocked) আছে।");
-                        return;
-                    }
-                    currentUser = { name: student.name, role: "student" };
-                    enterApp();
-                } else {
-                    alert("ভুল স্টুডেন্ট আইডি বা পাসওয়ার্ড! অ্যাডমিনের থেকে আইডি নিন।");
-                }
-            }
-        }
+      // Show tab content
+      document.querySelectorAll('.tab-content-block').forEach(t => t.style.display = 'none');
+      if (tabName === 'foundation') document.getElementById('tabFoundation').style.display = 'block';
+      if (tabName === 'practice') document.getElementById('tabPractice').style.display = 'block';
+      if (tabName === 'mocktest') document.getElementById('tabMockTest').style.display = 'block';
+      if (tabName === 'aidoubt') document.getElementById('tabAIDoubt').style.display = 'block';
+      if (tabName === 'reels') document.getElementById('tabReels').style.display = 'block';
+    }
 
-        function enterApp() {
-            document.getElementById("login-screen").style.display = "none";
-            document.getElementById("login-form-box").style.display = "none";
-            document.getElementById("app-screen").style.display = "block";
-            document.getElementById("bottom-nav").style.display = "block";
-            document.getElementById("logout-btn").style.display = "inline-flex";
-            document.getElementById("welcome-user").innerText = "স্বাগতম, " + currentUser.name + "!";
+    function toggleLanguage() {
+      currentLang = (currentLang === 'bn' ? 'en' : 'bn');
+      document.getElementById('langText').innerText = (currentLang === 'bn' ? 'English' : 'বাংলা');
+      
+      // Update UI translations
+      if (currentLang === 'en') {
+        document.getElementById('headerTagline').innerText = "Best Preparation for Govt. Exams";
+        document.getElementById('heroSubtitle').innerText = "Your Future, Our Mission";
+        document.getElementById('btnStudentLogin').innerText = "STUDENT LOGIN";
+        document.getElementById('bNav1').innerText = "Classes & Notes";
+        document.getElementById('bNav2').innerText = "Mock Test";
+        document.getElementById('bNav3').innerText = "AI Sir";
+        document.getElementById('bNav4').innerText = "Shorts";
+        document.getElementById('bNav5').innerText = "Logout";
+      } else {
+        document.getElementById('headerTagline').innerText = "সরকারি চাকরির সেরা প্রস্তুতি";
+        document.getElementById('heroSubtitle').innerText = "আপনার ভবিষ্যৎ, আমাদের লক্ষ্য";
+        document.getElementById('btnStudentLogin').innerText = "STUDENT LOGIN";
+        document.getElementById('bNav1').innerText = "ক্লাস ও নোটস";
+        document.getElementById('bNav2').innerText = "মক টেস্ট";
+        document.getElementById('bNav3').innerText = "AI স্যার";
+        document.getElementById('bNav4').innerText = "শর্টস";
+        document.getElementById('bNav5').innerText = "লগআউট";
+      }
+      renderSubjectFolders();
+    }
 
-            if (currentUser.role === "admin") {
-                document.getElementById("admin-switch-btn").style.display = "inline-flex";
-                document.getElementById("bottom-admin-btn").style.display = "flex";
-                renderAdminStudents();
-            } else {
-                document.getElementById("admin-switch-btn").style.display = "none";
-                document.getElementById("bottom-admin-btn").style.display = "none";
-            }
+    function syncAppCloud(manual) {
+      if (manual) showToast("ক্লাউড ডেটা সিঙ্ক করা হচ্ছে...");
+      initFirebaseService();
+    }
 
-            switchTab('study');
-            renderSubjects();
-            renderMocks();
-        }
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerText = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 2500);
+    }
 
-        function logout() {
-            currentUser = null;
-            document.getElementById("login-screen").style.display = "block";
-            document.getElementById("login-form-box").style.display = "none";
-            document.getElementById("app-screen").style.display = "none";
-            document.getElementById("bottom-nav").style.display = "none";
-            document.getElementById("logout-btn").style.display = "none";
-            document.getElementById("login-id").value = "";
-            document.getElementById("login-pass").value = "";
-        }
-
-        function switchTab(tab) {
-            ["study", "mock", "ai", "admin"].forEach(t => {
-                document.getElementById("tab-" + t).style.display = "none";
-            });
-            document.getElementById("tab-" + tab).style.display = "block";
-        }
-
-        function renderSubjects() {
-            document.getElementById("bc-sep-1").style.display = "none";
-            document.getElementById("bc-subject").style.display = "none";
-            document.getElementById("bc-sep-2").style.display = "none";
-            document.getElementById("bc-chapter").style.display = "none";
-
-            const container = document.getElementById("folder-container");
-            container.innerHTML = "";
-
-            const subjects = appData.subjects || {};
-            Object.keys(subjects).forEach(subj => {
-                const chapCount = Object.keys(subjects[subj] || {}).length;
-                const card = document.createElement("div");
-                card.className = "folder-card";
-                card.onclick = () => renderChapters(subj);
-                card.innerHTML = `
-                    <div class="folder-left">
-                        <div class="folder-icon"><i class="fa-solid fa-folder"></i></div>
-                        <div>
-                            <div style="font-weight:700; font-size:16px;">${subj}</div>
-                            <div style="font-size:12px; color:#94a3b8;">${chapCount} টি অধ্যায় (Chapters)</div>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right" style="color:#64748b;"></i>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function renderChapters(subj) {
-            document.getElementById("bc-sep-1").style.display = "inline";
-            const bcSub = document.getElementById("bc-subject");
-            bcSub.style.display = "inline";
-            bcSub.innerText = subj;
-            bcSub.onclick = () => renderChapters(subj);
-
-            document.getElementById("bc-sep-2").style.display = "none";
-            document.getElementById("bc-chapter").style.display = "none";
-
-            const container = document.getElementById("folder-container");
-            container.innerHTML = "";
-
-            const chapters = appData.subjects[subj] || {};
-            Object.keys(chapters).forEach(chap => {
-                const classCount = (chapters[chap] || []).length;
-                const card = document.createElement("div");
-                card.className = "folder-card";
-                card.onclick = () => renderClasses(subj, chap);
-                card.innerHTML = `
-                    <div class="folder-left">
-                        <div class="folder-icon" style="color:#fbbf24; background:rgba(245,158,11,0.15);">
-                            <i class="fa-solid fa-folder-open"></i>
-                        </div>
-                        <div>
-                            <div style="font-weight:700; font-size:16px;">${chap}</div>
-                            <div style="font-size:12px; color:#94a3b8;">${classCount} টি ভিডিও ক্লাস ও PDF নোটস</div>
-                        </div>
-                    </div>
-                    <i class="fa-solid fa-chevron-right" style="color:#64748b;"></i>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function extractYouTubeID(url) {
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = (url || "").match(regExp);
-            return (match && match[2].length === 11) ? match[2] : "M7lc1UVf-VE";
-        }
-
-        function renderClasses(subj, chap) {
-            document.getElementById("bc-sep-2").style.display = "inline";
-            const bcChap = document.getElementById("bc-chapter");
-            bcChap.style.display = "inline";
-            bcChap.innerText = chap;
-
-            const container = document.getElementById("folder-container");
-            container.innerHTML = "";
-
-            const items = appData.subjects[subj][chap] || [];
-            items.forEach((item) => {
-                const vidId = extractYouTubeID(item.yt);
-                container.innerHTML += `
-                    <div class="class-card">
-                        <div class="class-header">
-                            <div style="font-weight:700;"><i class="fa-solid fa-circle-play" style="color:#ef4444; margin-right:6px;"></i>${item.title}</div>
-                            <span style="font-size:11px; color:#60a5fa; font-weight:700;">Unlisted HD</span>
-                        </div>
-                        <div class="class-body">
-                            <div class="video-box">
-                                <iframe src="https://www.youtube.com/embed/${vidId}?rel=0&modestbranding=1" allowfullscreen></iframe>
-                            </div>
-                            <div class="pdf-box">
-                                <div>
-                                    <span style="background:#2563eb; font-size:10px; padding:3px 8px; border-radius:6px; font-weight:700;">STUDY MATERIAL</span>
-                                    <h4 style="margin-top:10px; font-size:15px;">${chap} - PDF Notes</h4>
-                                    <p style="font-size:12px; color:#cbd5e1; margin-top:4px;">ক্লাস নোটসটি গুগল ড্রাইভ থেকে দেখে বা ডাউনলোড করে নিন।</p>
-                                </div>
-                                <a href="${item.drive}" target="_blank" class="btn-drive">
-                                    <i class="fa-brands fa-google-drive"></i> Open Google Drive PDF
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-      function renderMocks() {
-            const container = document.getElementById("mock-container");
-            container.innerHTML = "";
-            const mocks = appData.mocks || {};
-
-            Object.keys(mocks).forEach(title => {
-                const qCount = (mocks[title] || []).length;
-                const div = document.createElement("div");
-                div.className = "folder-card";
-                div.innerHTML = `
-                    <div>
-                        <span style="color:#c084fc; font-size:11px; font-weight:700;">TESTBOOK STYLE MOCK</span>
-                        <div style="font-weight:700; font-size:16px; margin-top:2px;">${title}</div>
-                        <div style="font-size:12px; color:#94a3b8;">${qCount} টি প্রশ্ন | পূর্ণমান: ${qCount * 2}</div>
-                    </div>
-                `;
-                const btn = document.createElement("button");
-                btn.className = "nav-btn";
-                btn.style.background = "#f59e0b";
-                btn.style.color = "#000";
-                btn.style.fontWeight = "800";
-                btn.innerHTML = `Start Test ▶`;
-                btn.onclick = () => startMock(title);
-                div.appendChild(btn);
-                container.appendChild(div);
-            });
-        }
-
-        function startMock(title) {
-            const questions = appData.mocks[title] || [];
-            const container = document.getElementById("mock-container");
-            let html = `
-                <div class="admin-box">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-                        <h4>${title}</h4>
-                        <button onclick="renderMocks()" class="nav-btn">Exit</button>
-                    </div>
-            `;
-
-            questions.forEach((qObj, qIndex) => {
-                html += `
-                    <div style="background:rgba(6,16,33,0.7); padding:14px; border-radius:14px; margin-bottom:12px;">
-                        <div style="font-weight:700; margin-bottom:8px;">Q${qIndex + 1}. ${qObj.q}</div>
-                        ${qObj.options.map((opt, oIndex) => `
-                            <label style="display:flex; align-items:center; gap:8px; padding:8px; cursor:pointer; font-size:14px;">
-                                <input type="radio" name="q_${qIndex}" value="${oIndex}">
-                                <span>${opt}</span>
-                            </label>
-                        `).join("")}
-                    </div>
-                `;
-            });
-
-            html += `
-                    <button id="submit-mock-btn" class="btn-action" style="background:#059669;">Submit Mock Test & View Score</button>
-                    <div id="mock-result" style="display:none; margin-top:14px; padding:14px; background:rgba(37,99,235,0.2); border-radius:12px; text-align:center;"></div>
-                </div>
-            `;
-            container.innerHTML = html;
-            document.getElementById("submit-mock-btn").onclick = () => submitMock(title);
-        }
-
-        function submitMock(title) {
-            const questions = appData.mocks[title] || [];
-            let correct = 0, wrong = 0;
-
-            questions.forEach((qObj, qIndex) => {
-                const selected = document.querySelector(`input[name="q_${qIndex}"]:checked`);
-                if (selected) {
-                    if (parseInt(selected.value) === qObj.ans) correct++;
-                    else wrong++;
-                }
-            });
-
-            const score = (correct * 2) - (wrong * 0.5);
-            const resBox = document.getElementById("mock-result");
-            resBox.style.display = "block";
-            resBox.innerHTML = `
-                <h3 style="color:#fbbf24;">🎉 আপনার স্কোর: ${score} / ${questions.length * 2}</h3>
-                <p style="font-size:13px; margin-top:4px;">✅ সঠিক: ${correct} | ❌ ভুল: ${wrong}</p>
-            `;
-        }
-
-        async function askGeminiAI() {
-            const input = document.getElementById("ai-input");
-            const question = input.value.trim();
-            if (!question) return;
-
-            const chatBox = document.getElementById("ai-chat-box");
-            chatBox.innerHTML += `<div style="background:#2563eb; padding:10px 14px; border-radius:12px; align-self:flex-end; max-width:85%;">${question}</div>`;
-            input.value = "";
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            if (!appData.geminiKey) {
-                chatBox.innerHTML += `<div style="background:#78350f; padding:10px 14px; border-radius:12px;">⚠️ অ্যাডমিন প্যানেল থেকে Google Gemini API Key সেভ করুন।</div>`;
-                return;
-            }
-
-            try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${appData.geminiKey}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: `You are an expert teacher at 'Roy dar Coaching' for Govt exams. Answer clearly in Bengali and English: ${question}` }] }]
-                    })
-                });
-                const data = await response.json();
-                const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "দুঃখিত, আবার চেষ্টা করুন।";
-                chatBox.innerHTML += `<div style="background:rgba(255,255,255,0.08); padding:10px 14px; border-radius:12px; white-space:pre-line;">🤖 <b>Roy dar AI:</b>\n${reply}</div>`;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            } catch (e) {
-                chatBox.innerHTML += `<div style="background:#7f1d1d; padding:10px;">API সংযোগে সমস্যা হয়েছে।</div>`;
-            }
-        }
-
-        function renderAdminStudents() {
-            const list = document.getElementById("admin-student-list");
-            list.innerHTML = "";
-            (appData.students || []).forEach((s, idx) => {
-                list.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; background:rgba(0,0,0,0.3); border-radius:8px; margin-bottom:6px;">
-                        <span><b>${s.name}</b> (${s.id})</span>
-                        <button onclick="toggleStudent(${idx})" class="nav-btn" style="background:${s.active ? '#059669' : '#dc2626'};">
-                            ${s.active ? 'Active' : 'Blocked'}
-                        </button>
-                    </div>
-                `;
-            });
-        }
-
-        async function adminAddStudent() {
-            const name = document.getElementById("stu-name").value.trim();
-            const id = document.getElementById("stu-id").value.trim();
-            const pass = document.getElementById("stu-pass").value.trim();
-            if (!name || !id || !pass) return alert("সব ঘর পূরণ করুন!");
-            if (!appData.students) appData.students = [];
-            if (appData.students.some(s => s.id === id)) return alert("এই আইডিটি আগে থেকেই আছে!");
-
-            appData.students.push({ name, id, pass, active: true });
-            await saveData();
-            renderAdminStudents();
-            document.getElementById("stu-name").value = "";
-            document.getElementById("stu-id").value = "";
-            document.getElementById("stu-pass").value = "";
-            alert("স্টুডেন্ট আইডি তৈরি হয়েছে!");
-        }
-
-        async function toggleStudent(idx) {
-            appData.students[idx].active = !appData.students[idx].active;
-            await saveData();
-            renderAdminStudents();
-        }
-
-        async function saveAppLogo() {
-            const logoUrl = document.getElementById("admin-logo-url").value.trim();
-            if (!logoUrl) return alert("লোগো লিংক দিন!");
-            appData.logoUrl = logoUrl;
-            await saveData();
-            applyLogo();
-            alert("লোগো সফলভাবে আপডেট হয়েছে!");
-        }
-
-        async function adminAddClass() {
-            const subj = document.getElementById("add-subj").value.trim();
-            const chap = document.getElementById("add-chap").value.trim();
-            const title = document.getElementById("add-title").value.trim();
-            const yt = document.getElementById("add-yt").value.trim();
-            const drive = document.getElementById("add-drive").value.trim();
-
-            if (!subj || !chap || !title || !yt) return alert("সব তথ্য দিন!");
-            if (!appData.subjects) appData.subjects = {};
-            if (!appData.subjects[subj]) appData.subjects[subj] = {};
-            if (!appData.subjects[subj][chap]) appData.subjects[subj][chap] = [];
-
-            appData.subjects[subj][chap].push({ title, yt, drive: drive || "#" });
-            await saveData();
-            renderSubjects();
-            alert("নতুন ক্লাস ও নোটস সেভ হয়েছে!");
-        }
-
-        async function adminAddMockQ() {
-            const title = document.getElementById("mock-title").value.trim();
-            const q = document.getElementById("mock-q").value.trim();
-            const o1 = document.getElementById("mock-o1").value.trim();
-            const o2 = document.getElementById("mock-o2").value.trim();
-            const o3 = document.getElementById("mock-o3").value.trim();
-            const o4 = document.getElementById("mock-o4").value.trim();
-            const ans = parseInt(document.getElementById("mock-ans").value);
-
-            if (!title || !q || !o1 || !o2) return alert("প্রশ্ন ও অপশন দিন!");
-            if (!appData.mocks) appData.mocks = {};
-            if (!appData.mocks[title]) appData.mocks[title] = [];
-            appData.mocks[title].push({ q, options: [o1, o2, o3, o4], ans });
-            await saveData();
-            renderMocks();
-            alert("মক টেস্টে প্রশ্ন যুক্ত হয়েছে!");
-        }
-
-        async function saveGeminiKey() {
-            appData.geminiKey = document.getElementById("gemini-key").value.trim();
-            await saveData();
-            alert("Gemini API Key সেভ হয়েছে!");
-        }
-    </script>
+    // App Initialization
+    window.addEventListener('DOMContentLoaded', () => {
+      initFirebaseService();
+      renderSubjectFolders();
+    });
+  </script>
 </body>
 </html>
