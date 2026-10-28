@@ -1,1585 +1,1286 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Roy dar Coaching - সরকারি চাকরির সেরা প্রস্তুতি</title>
-  
-  <!-- Google Fonts & Font Awesome Icons -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Roy dar Coaching - Official App</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- React & Babel CDNs -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-  <!-- Firebase 9.x Compat Libraries (100% Free Cloud Storage & Realtime DB) -->
+  <!-- Firebase v9 Compat CDNs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <style>
     :root {
-      --bg-dark: #070d1e;
-      --card-bg: rgba(16, 26, 54, 0.85);
-      --card-border: rgba(30, 58, 110, 0.6);
-      --accent-gold: #ff9f1c;
-      --accent-orange: #f77f00;
-      --text-white: #ffffff;
+      --bg-dark: #060d1f;
+      --bg-card: rgba(16, 26, 54, 0.88);
+      --bg-glass: rgba(22, 36, 74, 0.75);
+      --border-glow: rgba(255, 153, 0, 0.28);
+      --border-subtle: rgba(255, 255, 255, 0.1);
+      --text-main: #f0f4fc;
       --text-muted: #94a3b8;
-      --live-green: #10b981;
-      --danger-red: #ef4444;
-      --royal-blue: #1e3a8a;
+      --accent-orange: #ff9900;
+      --accent-grad: linear-gradient(135deg, #ff9900 0%, #ff5500 100%);
+      --accent-blue: #2563eb;
+      --danger: #ef4444;
+      --success: #10b981;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Poppins', 'Hind Siliguri', sans-serif;
+      -webkit-tap-highlight-color: transparent;
       user-select: none;
-      -webkit-user-select: none;
     }
 
     body {
       background-color: var(--bg-dark);
-      color: var(--text-white);
+      background-image: radial-gradient(circle at 50% 0%, #15274d 0%, #060d1f 75%);
+      color: var(--text-main);
+      font-family: 'Poppins', 'Hind Siliguri', sans-serif;
       min-height: 100vh;
+      overflow-x: hidden;
       display: flex;
       justify-content: center;
-      background-image: 
-        radial-gradient(circle at 15% 20%, rgba(30, 58, 138, 0.35) 0%, transparent 45%),
-        radial-gradient(circle at 85% 80%, rgba(247, 127, 0, 0.15) 0%, transparent 45%);
-      overflow-x: hidden;
     }
 
-    .app-viewport {
+    #root {
       width: 100%;
       max-width: 480px;
       min-height: 100vh;
-      background: var(--bg-dark);
-      position: relative;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 0 45px rgba(0, 0, 0, 0.85);
-      padding-bottom: 75px;
+      position: relative;
+      background: rgba(6, 13, 31, 0.95);
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
     }
 
-    /* Top App Header */
-    .app-header {
+    .header-bar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(6, 13, 31, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 10px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 16px;
-      background: rgba(7, 13, 30, 0.95);
-      backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    .brand-group {
+    .brand-wrap {
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .brand-logo-frame {
-      width: 40px;
-      height: 40px;
+    .brand-logo {
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
-      background: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2px;
-      border: 1.5px solid var(--accent-gold);
-      overflow: hidden;
-    }
-
-    .brand-logo-frame img {
-      width: 100%;
-      height: 100%;
+      border: 2px solid var(--accent-orange);
       object-fit: cover;
-      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(255, 153, 0, 0.35);
     }
 
-    .brand-info h1 {
+    .brand-title {
       font-size: 15px;
       font-weight: 700;
+      color: #ffffff;
       line-height: 1.2;
-      color: #fff;
     }
 
-    .brand-info p {
+    .brand-sub {
       font-size: 10.5px;
-      color: #60a5fa;
+      color: var(--accent-orange);
       font-weight: 500;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 7px;
-    }
-
-    .pill-btn {
-      background: rgba(30, 58, 110, 0.5);
-      border: 1px solid var(--card-border);
-      color: #ffffff;
-      padding: 6px 10px;
-      border-radius: 18px;
-      font-size: 11.5px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .pill-btn:active {
-      transform: scale(0.95);
-      background: var(--royal-blue);
-    }
-
-    .admin-btn {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      color: #fca5a5;
-    }
-
-    /* Screen Views */
-    .screen-view {
-      display: none;
-      flex-direction: column;
-      flex: 1;
-      padding: 16px;
-      animation: fadeIn 0.25s ease-out;
-    }
-
-    .screen-view.active {
-      display: flex;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Hero Avatar Section */
-    .hero-avatar-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 15px 0 18px;
-    }
-
-    .avatar-ring {
-      width: 105px;
-      height: 105px;
-      border-radius: 50%;
-      padding: 4px;
-      background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange), #3b82f6);
-      box-shadow: 0 0 25px rgba(255, 159, 28, 0.45);
-      position: relative;
-    }
-
-    .avatar-inner {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: #0f172a;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .avatar-inner img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .brand-title-large {
-      font-size: 21px;
-      font-weight: 800;
-      letter-spacing: 0.8px;
-      margin-top: 14px;
-      text-transform: uppercase;
-      text-align: center;
-      color: #ffffff;
-    }
-
-    .brand-tagline {
-      font-size: 13px;
-      color: #93c5fd;
-      text-align: center;
-      margin-top: 4px;
-      font-weight: 500;
-    }
-
-    .live-banner {
-      background: rgba(16, 26, 54, 0.8);
-      border: 1px solid rgba(247, 127, 0, 0.4);
-      border-radius: 26px;
-      padding: 9px 18px;
-      margin: 16px auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      box-shadow: 0 4px 18px rgba(247, 127, 0, 0.12);
-    }
-
-    .live-banner-tag {
-      color: #f87171;
-      font-size: 12.5px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
       gap: 6px;
     }
 
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
-      background: #ef4444;
+    .btn-chip {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      color: #fff;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+    }
+    .btn-chip:active { transform: scale(0.95); }
+
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid var(--danger);
+      color: #fca5a5;
+      padding: 5px 8px;
       border-radius: 50%;
-      box-shadow: 0 0 8px #ef4444;
-      animation: pulse 1.4s infinite;
+      font-size: 13px;
+      cursor: pointer;
     }
 
-    @keyframes pulse {
-      0% { opacity: 0.4; transform: scale(0.9); }
-      50% { opacity: 1; transform: scale(1.2); }
-      100% { opacity: 0.4; transform: scale(0.9); }
+    .content-area {
+      flex: 1;
+      padding: 14px 14px 90px 14px;
+      overflow-y: auto;
     }
 
-    /* Cards & Glassmorphism */
     .glass-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
       border-radius: 16px;
       padding: 16px;
       margin-bottom: 14px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
       position: relative;
     }
 
-    .welcome-card {
-      background: linear-gradient(135deg, rgba(29, 78, 216, 0.3) 0%, rgba(15, 23, 42, 0.8) 100%);
-      border: 1px solid rgba(59, 130, 246, 0.35);
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 16px;
-    }
-
-    .badge-subtle {
-      display: inline-block;
-      background: rgba(59, 130, 246, 0.2);
-      color: #93c5fd;
-      font-size: 10px;
+    .btn-primary {
+      background: var(--accent-grad);
+      color: #000;
       font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-    }
-
-    .primary-btn {
-      width: 100%;
-      padding: 14px;
-      border-radius: 30px;
       border: none;
-      font-size: 14.5px;
-      font-weight: 700;
+      border-radius: 12px;
+      padding: 12px 18px;
+      width: 100%;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 153, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.15s ease;
+    }
+    .btn-primary:active { transform: scale(0.97); }
+
+    .btn-secondary {
+      background: var(--bg-glass);
+      color: #fff;
+      font-weight: 600;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 12px 18px;
+      width: 100%;
+      font-size: 14px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      transition: all 0.2s ease;
-    }
-
-    .btn-gold {
-      background: linear-gradient(90deg, #ff9f1c, #f77f00);
-      color: #070d1e;
-      box-shadow: 0 6px 20px rgba(247, 127, 0, 0.4);
-    }
-
-    .btn-gold:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px 10px rgba(247, 127, 0, 0.3);
-    }
-
-    .btn-blue {
-      background: rgba(30, 58, 110, 0.6);
-      border: 1px solid rgba(59, 130, 246, 0.4);
-      color: #93c5fd;
-      margin-top: 12px;
-    }
-
-    /* Form Fields */
-    .input-group {
-      margin-bottom: 16px;
-    }
-
-    .input-label {
-      display: block;
-      font-size: 12.5px;
-      font-weight: 500;
-      color: var(--text-muted);
-      margin-bottom: 6px;
+      gap: 8px;
     }
 
     .input-field {
       width: 100%;
-      background: rgba(11, 20, 44, 0.9);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 13px 14px;
-      color: #ffffff;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .input-field:focus {
-      border-color: var(--accent-gold);
-    }
-
-    /* Top Sub-Nav Badges (Foundation, Practice, Tests, etc) */
-    .section-nav-scroll {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 12px;
-      margin-bottom: 14px;
-      scrollbar-width: none;
-    }
-    .section-nav-scroll::-webkit-scrollbar { display: none; }
-
-    .nav-chip {
-      white-space: nowrap;
-      padding: 8px 14px;
-      border-radius: 20px;
-      background: rgba(16, 26, 54, 0.7);
-      border: 1px solid var(--card-border);
-      color: var(--text-muted);
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s;
-    }
-
-    .nav-chip.active {
-      background: linear-gradient(90deg, #ff9f1c, #f77f00);
-      color: #070d1e;
-      border-color: #ff9f1c;
-      box-shadow: 0 4px 12px rgba(255, 159, 28, 0.35);
-    }
-
-    /* Folder and Content Items */
-    .folder-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .folder-item:active {
-      background: rgba(30, 58, 110, 0.5);
-      border-color: var(--accent-gold);
-    }
-
-    .folder-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .folder-icon {
-      width: 42px;
-      height: 42px;
+      padding: 12px 14px;
+      background: rgba(6, 13, 31, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 10px;
-      background: rgba(59, 130, 246, 0.2);
-      color: #60a5fa;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-    }
-
-    .folder-icon.video {
-      background: rgba(239, 68, 68, 0.2);
-      color: #f87171;
-    }
-
-    .folder-icon.pdf {
-      background: rgba(16, 185, 129, 0.2);
-      color: #34d399;
-    }
-
-    .folder-title {
+      color: #fff;
       font-size: 14px;
-      font-weight: 600;
-      color: #ffffff;
+      margin-top: 6px;
+      margin-bottom: 14px;
+      outline: none;
+    }
+    .input-field:focus {
+      border-color: var(--accent-orange);
+      box-shadow: 0 0 8px rgba(255, 153, 0, 0.3);
     }
 
-    .folder-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    /* Fixed Bottom Tab Bar */
-    .bottom-tab-bar {
+    .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
       width: 100%;
       max-width: 480px;
-      height: 65px;
-      background: rgba(7, 13, 30, 0.98);
+      background: rgba(6, 13, 31, 0.95);
       backdrop-filter: blur(14px);
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 1px solid var(--border-subtle);
       display: flex;
       justify-content: space-around;
-      align-items: center;
+      padding: 8px 4px;
       z-index: 100;
-      padding: 0 6px;
     }
 
-    .tab-btn {
+    .nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      gap: 3px;
       background: none;
       border: none;
-      color: #64748b;
-      font-size: 10px;
+      color: var(--text-muted);
+      font-size: 11px;
       font-weight: 600;
       cursor: pointer;
-      gap: 4px;
       flex: 1;
-      height: 100%;
+      padding: 4px 0;
       transition: color 0.2s;
     }
-
-    .tab-btn i {
-      font-size: 18px;
+    .nav-item.active {
+      color: var(--accent-orange);
+    }
+    .nav-icon {
+      font-size: 20px;
     }
 
-    .tab-btn.active {
-      color: var(--accent-gold);
-    }
-
-    /* AI Doubt Chat Box */
-    .chat-container {
+    .folder-item {
       display: flex;
-      flex-direction: column;
-      height: calc(100vh - 190px);
-      background: rgba(11, 20, 44, 0.6);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .chat-messages {
-      flex: 1;
+      align-items: center;
+      justify-content: space-between;
       padding: 14px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .folder-item:active {
+      border-color: var(--accent-orange);
+      transform: scale(0.99);
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+      margin-top: 10px;
+      background: #000;
+    }
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
     }
 
     .chat-bubble {
       max-width: 85%;
       padding: 12px 14px;
       border-radius: 14px;
+      margin-bottom: 10px;
       font-size: 13px;
-      line-height: 1.45;
+      line-height: 1.5;
+      word-wrap: break-word;
+      user-select: text;
     }
-
-    .bubble-bot {
-      background: rgba(30, 58, 110, 0.6);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      color: #e2e8f0;
+    .chat-user {
+      background: var(--accent-grad);
+      color: #000;
+      font-weight: 600;
+      align-self: flex-end;
+      border-bottom-right-radius: 2px;
+    }
+    .chat-ai {
+      background: var(--bg-glass);
+      color: #fff;
+      border: 1px solid var(--border-subtle);
       align-self: flex-start;
       border-bottom-left-radius: 2px;
     }
 
-    .bubble-user {
-      background: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
-      color: #070d1e;
-      font-weight: 500;
-      align-self: flex-end;
-      border-bottom-right-radius: 2px;
-    }
-
-    .chat-input-bar {
-      padding: 10px;
-      background: rgba(7, 13, 30, 0.95);
-      border-top: 1px solid var(--card-border);
-      display: flex;
-      gap: 8px;
-    }
-
-    .chat-input-bar input {
-      flex: 1;
-      background: rgba(16, 26, 54, 0.9);
-      border: 1px solid var(--card-border);
-      border-radius: 24px;
-      padding: 10px 16px;
-      color: #fff;
-      font-size: 13px;
-      outline: none;
-    }
-
-    .send-icon-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: #3b82f6;
-      border: none;
-      color: #fff;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Modal / Popups */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px);
-      z-index: 200;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-
-    .modal-backdrop.show {
-      display: flex;
-    }
-
-    .modal-box {
+    .option-btn {
       width: 100%;
-      max-width: 440px;
-      background: #0d1733;
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 20px;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .close-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 20px;
+      text-align: left;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      border-radius: 10px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      color: #fff;
+      font-size: 13.5px;
       cursor: pointer;
+      transition: all 0.2s;
     }
-
-    .cloud-status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      padding: 4px 10px;
-      border-radius: 12px;
+    .option-btn.selected {
+      border-color: var(--accent-orange);
+      background: rgba(255, 153, 0, 0.15);
       font-weight: 600;
-      margin-bottom: 12px;
-    }
-
-    .status-online {
-      background: rgba(16, 185, 129, 0.15);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-
-    .status-offline {
-      background: rgba(239, 68, 68, 0.15);
-      color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-
-    /* Notification toast */
-    .toast-notice {
-      position: fixed;
-      top: 65px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #1e3a8a;
-      border: 1px solid #3b82f6;
-      color: #ffffff;
-      padding: 10px 20px;
-      border-radius: 24px;
-      font-size: 13px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-      z-index: 300;
-      display: none;
-      animation: fadeIn 0.3s;
     }
   </style>
 </head>
 <body>
-    <div class="app-viewport">
-    
-    <!-- Top Header -->
-    <header class="app-header">
-      <div class="brand-group">
-        <div class="brand-logo-frame">
-          <i class="fa-solid fa-graduation-cap" style="color:#070d1e; font-size: 20px;"></i>
-        </div>
-        <div class="brand-info">
-          <h1>Roy dar Coaching</h1>
-          <p id="headerTagline">সরকারি চাকরির সেরা প্রস্তুতি</p>
-        </div>
-      </div>
-      <div class="header-actions">
-        <button class="pill-btn" onclick="syncAppCloud(true)">
-          <i class="fa-solid fa-rotate"></i> <span id="syncText">Sync</span>
-        </button>
-        <button class="pill-btn" onclick="toggleLanguage()">
-          <i class="fa-solid fa-language"></i> <span id="langText">English</span>
-        </button>
-        <button class="pill-btn admin-btn" onclick="openAdminModal()" title="Admin Control">
-          <i class="fa-solid fa-shield-halved"></i>
-        </button>
-      </div>
-    </header>
+    <div id="root"></div>
 
-    <!-- TOAST NOTIFICATION -->
-    <div id="toast" class="toast-notice"></div>
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useMemo } = React;
 
-    <!-- SCREEN 1: LANDING / LOGIN SCREEN -->
-    <main id="screenLanding" class="screen-view active">
-      <div class="hero-avatar-wrap">
-        <div class="avatar-ring">
-          <div class="avatar-inner">
-            <i class="fa-solid fa-user-tie" style="font-size: 55px; color: #ff9f1c;"></i>
-          </div>
-        </div>
-        <h2 class="brand-title-large">Roy dar Coaching</h2>
-        <p class="brand-tagline" id="heroSubtitle">আপনার ভবিষ্যৎ, আমাদের লক্ষ্য</p>
-      </div>
+    // --- Firebase Configuration ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyBjospB9mFnRutXKYb2__c2kfD3Ev1rHRk",
+      authDomain: "roy-dar-coaching.firebaseapp.com",
+      databaseURL: "https://roy-dar-coaching-default-rtdb.firebaseio.com",
+      projectId: "roy-dar-coaching",
+      storageBucket: "roy-dar-coaching.appspot.com",
+      messagingSenderId: "roy-dar-coaching",
+      appId: "1:roy-dar-coaching:web"
+    };
 
-      <div class="live-banner">
-        <div class="live-banner-tag">
-          <span class="pulse-dot"></span>
-          <span>APP IS NOW LIVE!</span>
-        </div>
-        <div style="font-size:11.5px; color:#cbd5e1;" id="liveSub">Online classes & test series active</div>
-      </div>
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
 
-      <div class="glass-card" style="text-align: center; padding: 24px 16px;">
-        <i class="fa-solid fa-address-card" style="font-size: 50px; color: #3b82f6; margin-bottom: 12px;"></i>
-        <h3 style="font-size: 16px; margin-bottom: 6px;" id="welcomeCardTitle">স্টুডেন্ট লার্নিং পোর্টাল</h3>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;" id="welcomeCardSub">এডুকেশনাল ভিডিও ক্লাস, হ্যান্ডরিটেন নোটস এবং মক টেস্ট এক জায়গায়।</p>
-        
-        <button class="primary-btn btn-gold" onclick="showStudentLoginForm()">
-          <i class="fa-solid fa-graduation-cap"></i> <span id="btnStudentLogin">STUDENT LOGIN</span>
-        </button>
-        
-        <button class="primary-btn btn-blue" onclick="openAdminModal()">
-          <i class="fa-solid fa-lock"></i> <span id="btnAdminAccess">ADMIN PORTAL</span>
-        </button>
-      </div>
-    </main>
+    // --- Gemini API Key ---
+    const GEMINI_API_KEY = "AQ.Ab8RN6KZXp75narzWRH2h5sg44MTx45ZSSKwyYB24hXQtFdaAw";
 
-    <!-- SCREEN 2: STUDENT LOGIN FORM -->
-    <main id="screenStudentLogin" class="screen-view">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-        <h2 style="font-size:18px; color:var(--accent-gold);"><i class="fa-solid fa-user-graduate"></i> <span id="txtStudentLoginTitle">Student Login</span></h2>
-        <button class="pill-btn" onclick="switchScreen('screenLanding')"><i class="fa-solid fa-arrow-left"></i> <span id="txtBack">Back</span></button>
-      </div>
+    // --- Client-Side Salted SHA-256 Hashing ---
+    async function hashPassword(plainPassword) {
+      const salt = "ROY_DAR_SECURE_SALT_2026";
+      const encoder = new TextEncoder();
+      const data = encoder.encode(plainPassword + salt);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+      return Array.from(new Uint8Array(hashBuffer))
+        .map(b => b.toString(16).padStart(2, "0"))
+        .join("");
+    }
 
-      <div class="glass-card">
-        <div class="input-group">
-          <label class="input-label" id="lblStuId">Student ID / Mobile Number</label>
-          <input type="text" id="studentIdInput" class="input-field" placeholder="Enter your ID">
-        </div>
+    // --- Clean YouTube Embed Helper ---
+    function getCleanYouTubeEmbed(url) {
+      if (!url) return null;
+      let videoId = "";
+      if (url.includes("youtu.be/")) {
+        videoId = url.split("youtu.be/")[1]?.split("?")[0];
+      } else if (url.includes("watch?v=")) {
+        videoId = url.split("watch?v=")[1]?.split("&")[0];
+      } else if (url.includes("embed/")) {
+        videoId = url.split("embed/")[1]?.split("?")[0];
+      }
+      return videoId ? `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1` : null;
+    }
 
-        <div class="input-group">
-          <label class="input-label" id="lblStuPass">Password</label>
-          <input type="password" id="studentPassInput" class="input-field" placeholder="Enter your password">
-        </div>
+    // --- Clean Google Drive Embed Helper ---
+    function getCleanDriveEmbed(url) {
+      if (!url) return null;
+      if (url.includes("/view")) {
+        return url.replace("/view", "/preview");
+      }
+      return url;
+    }
 
-        <button class="primary-btn btn-gold" onclick="executeStudentLogin()">
-          <i class="fa-solid fa-arrow-right-to-bracket"></i> <span id="btnProceed">PROCEED TO APP</span>
-        </button>
+    // --- Default Institute Logo (Modern Academy Crest) ---
+    const DEFAULT_ACADEMY_LOGO = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%2308142c' stroke='%23ff9900' stroke-width='4'/><path d='M50 22 L80 36 L50 50 L20 36 Z' fill='%23ff9900'/><path d='M30 45 L30 65 Q50 78 70 65 L70 45' fill='none' stroke='%23ffaa00' stroke-width='3'/><path d='M38 52 L38 68 Q50 76 62 68 L62 52' fill='none' stroke='%2338bdf8' stroke-width='2'/><circle cx='50' cy='42' r='4' fill='%23fff'/></svg>";
 
-        <div style="margin-top:16px; text-align:center;">
-          <a href="javascript:void(0)" onclick="openChangePasswordModal('student')" style="color:#60a5fa; font-size:12px; text-decoration:none;">
-            <i class="fa-solid fa-key"></i> <span id="txtForgotPass">Change / Reset Password?</span>
-          </a>
-        </div>
-      </div>
-    </main>
+    // --- Translations Dictionary ---
+    const i18n = {
+      en: {
+        tagline: "Premier Preparation for Govt. Exams",
+        sync: "Sync",
+        studentLogin: "Student Login",
+        adminLogin: "Admin Login",
+        studentIdPlaceholder: "Student ID / Mobile Number",
+        passwordPlaceholder: "Enter Password",
+        proceedBtn: "PROCEED TO APP",
+        back: "Back",
+        welcome: "Welcome",
+        targetExams: "Target: Govt. Exams (WBP • WBPSC • SSC • RAIL)",
+        tabClassNotes: "Classes & Notes",
+        tabMockTest: "Mock Tests",
+        tabAiSir: "AI Sir",
+        startTest: "Start Test",
+        submitTest: "Submit Test",
+        scoreCard: "Test Results",
+        accuracy: "Accuracy",
+        totalScore: "Score",
+        aiSirWelcome: "Hello! I am Roy dar Coaching's AI Tutor. Ask me any question related to your preparation!",
+        askPlaceholder: "Ask your question here...",
+        adminPanel: "Admin Panel",
+        addFolder: "Add New Folder",
+        addContent: "Add Video / Note",
+        manageStudents: "Manage Students",
+        logout: "Logout",
+        blockedMsg: "Your access has been suspended by Admin. Please contact Roy dar Coaching."
+      },
+      bn: {
+        tagline: "সরকারি চাকরির সেরা প্রস্তুতি",
+        sync: "সিঙ্ক",
+        studentLogin: "স্টুডেন্ট লগইন",
+        adminLogin: "অ্যাডমিন লগইন",
+        studentIdPlaceholder: "স্টুডেন্ট আইডি / মোবাইল নম্বর",
+        passwordPlaceholder: "পাসওয়ার্ড দিন",
+        proceedBtn: "অ্যাপে প্রবেশ করুন",
+        back: "পেছনে",
+        welcome: "স্বাগতম",
+        targetExams: "টার্গেট: সরকারি চাকরি প্রস্তুতি (WBP • WBPSC • SSC • RAIL)",
+        tabClassNotes: "ক্লাস ও নোটস",
+        tabMockTest: "মক টেস্ট",
+        tabAiSir: "AI স্যার",
+        startTest: "টেস্ট শুরু করুন",
+        submitTest: "জমা দিন",
+        scoreCard: "ফলাফল ও বিশ্লেষণ",
+        accuracy: "সঠিকতার হার",
+        totalScore: "মোট নম্বর",
+        aiSirWelcome: "হ্যালো! আমি Roy dar Coaching-এর AI শিক্ষক। তোমার যেকোনো পড়াশোনার ডাউট বা প্রশ্ন এখানে লেখো!",
+        askPlaceholder: "তোমার প্রশ্ন এখানে লেখো...",
+        adminPanel: "অ্যাডমিন প্যানেল",
+        addFolder: "নতুন ফোল্ডার যোগ করুন",
+        addContent: "ভিডিও বা নোট যোগ করুন",
+        manageStudents: "ছাত্রছাত্রী পরিচালনা",
+        logout: "লগআউট",
+        blockedMsg: "আপনার অ্যাকাউন্টটি সাময়িকভাবে অ্যাডমিন কর্তৃক স্থগিত করা হয়েছে। কোচিংয়ে যোগাযোগ করুন।"
+      }
+    };
+        function App() {
+      const [lang, setLang] = useState("bn");
+      const [currentUser, setCurrentUser] = useState(null); // { role: 'admin'|'student', id: string, name: string }
+      const [loginRole, setLoginRole] = useState(null); // 'student' | 'admin' | null
+      const [loginId, setLoginId] = useState("");
+      const [loginPass, setLoginPass] = useState("");
+      const [errorMsg, setErrorMsg] = useState("");
+      const [activeTab, setActiveTab] = useState("classes"); // 'classes', 'mock', 'ai', 'admin'
+      const [isSyncing, setIsSyncing] = useState(false);
 
-    <!-- SCREEN 3: MAIN APP (LOGGED IN) -->
-    <main id="screenMainApp" class="screen-view">
-      <!-- Welcome Header -->
-      <div class="welcome-card">
-        <span class="badge-subtle">Roy dar Coaching Portal</span>
-        <h2 style="font-size:17px; margin-bottom:4px;" id="portalUserName">স্বাগতম, শিক্ষার্থী!</h2>
-        <p style="font-size:12px; color:#93c5fd;" id="portalTarget">টার্গেট: সরকারি চাকরি প্রস্তুতি (WBP • WBPSC • SSC • RAIL)</p>
-      </div>
+      // App Master Settings & State
+      const [appSettings, setAppSettings] = useState({
+        appName: "Roy dar Coaching",
+        tagline: "সরকারি চাকরির সেরা প্রস্তুতি",
+        logoUrl: DEFAULT_ACADEMY_LOGO,
+        adminPhone: "8436940359",
+        adminPassHash: ""
+      });
 
-      <!-- 5 Major Section Navigator Chips -->
-      <div class="section-nav-scroll">
-        <div class="nav-chip active" onclick="switchMainTab('foundation', this)">
-          <i class="fa-solid fa-book-open"></i> <span id="chipFoundation">Foundation Batch</span>
-        </div>
-        <div class="nav-chip" onclick="switchMainTab('practice', this)">
-          <i class="fa-solid fa-dumbbell"></i> <span id="chipPractice">Practice Batch</span>
-        </div>
-        <div class="nav-chip" onclick="switchMainTab('mocktest', this)">
-          <i class="fa-solid fa-file-signature"></i> <span id="chipMock">Mock Test & Quiz</span>
-        </div>
-        <div class="nav-chip" onclick="switchMainTab('aidoubt', this)">
-          <i class="fa-solid fa-robot"></i> <span id="chipAI">AI Doubt Support</span>
-        </div>
-        <div class="nav-chip" onclick="switchMainTab('reels', this)">
-          <i class="fa-solid fa-film"></i> <span id="chipReels">Shorts & Reels</span>
-        </div>
-      </div>
+      // Infinite Folder Tree Root
+      const [folderTree, setFolderTree] = useState({
+        id: "root",
+        name: "সব বিষয় (Subjects)",
+        children: [
+          {
+            id: "f-history",
+            name: "Indian History (ভারতের ইতিহাস)",
+            children: [
+              {
+                id: "f-ancient",
+                name: "Ancient Indian History (প্রাচীন ভারত)",
+                children: [],
+                contents: [
+                  {
+                    id: "c-1",
+                    title: "সিন্ধু সভ্যতা ও হরপ্পা সংস্কৃতি (Full Class)",
+                    type: "video",
+                    url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                  },
+                  {
+                    id: "c-2",
+                    title: "মৌর্য সাম্রাজ্য ও অশোকের শিলালিপি (Study Note)",
+                    type: "pdf",
+                    url: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs/view"
+                  }
+                ]
+              }
+            ],
+            contents: []
+          }
+        ],
+        contents: []
+      });
 
-      <!-- TAB CONTAINER 1: FOUNDATION BATCH (Folder Based, 7 Subjects) -->
-      <section id="tabFoundation" class="tab-content-block">
-        <div style="font-size:13px; font-weight:600; color:#93c5fd; margin-bottom:10px;">
-          <i class="fa-solid fa-folder-tree"></i> <span id="titleSubCategories">৭টি মূল বিষয় (7 Major Subjects)</span>
-        </div>
-        <div id="subjectListContainer"></div>
-      </section>
+      // Navigation Breadcrumb inside Folders
+      const [folderBreadcrumb, setFolderBreadcrumb] = useState([]);
+      const [studentsList, setStudentsList] = useState({});
+      const [mockTests, setMockTests] = useState([
+        {
+          id: "mock-1",
+          title: "Ancient History Special Mock Test",
+          totalQuestions: 2,
+          durationMins: 5,
+          questions: [
+            {
+              id: "q1",
+              text_bn: "হরপ্পা সভ্যতা কোন নদীর তীরে অবস্থিত ছিল?",
+              text_en: "Harappan civilization was situated on the banks of which river?",
+              options_bn: ["সিন্ধু", "রাভি", "গঙ্গা", "ব্রহ্মপুত্র"],
+              options_en: ["Indus", "Ravi", "Ganga", "Brahmaputra"],
+              correctIndex: 1,
+              explanation: "হরপ্পা পাকিস্তানের পাঞ্জাব প্রদেশের মন্টগোমারি জেলায় রাভি (ইরাবতী) নদীর তীরে আবিষ্কৃত হয়েছিল।"
+            },
+            {
+              id: "q2",
+              text_bn: "কলিঙ্গ যুদ্ধ কত খ্রিস্টপূর্বাব্দে সংঘটিত হয়েছিল?",
+              text_en: "In which BCE year was the Kalinga War fought?",
+              options_bn: ["২৬১ খ্রিস্টপূর্বাব্দ", "২৭৩ খ্রিস্টপূর্বাব্দ", "৩২৬ খ্রিস্টপূর্বাব্দ", "১৮৫ খ্রিস্টপূর্বাব্দ"],
+              options_en: ["261 BCE", "273 BCE", "326 BCE", "185 BCE"],
+              correctIndex: 0,
+              explanation: "মৌর্য সম্রাট অশোকের রাজত্বকালের অষ্টম বর্ষে অর্থাৎ ২৬১ খ্রিস্টপূর্বাব্দে ঐতিহাসিক কলিঙ্গ যুদ্ধ ঘটেছিল।"
+            }
+          ]
+        }
+      ]);
 
-      <!-- TAB CONTAINER 2: PRACTICE BATCH -->
-      <section id="tabPractice" class="tab-content-block" style="display:none;">
-        <div style="font-size:13px; font-weight:600; color:#93c5fd; margin-bottom:10px;">
-          <i class="fa-solid fa-pen-to-square"></i> <span id="titlePracticeSets">অনুশীলনী সেট ও পি.ওয়াই.কিউ</span>
-        </div>
-        <div id="practiceListContainer"></div>
-      </section>
+      const t = i18n[lang];
 
-      <!-- TAB CONTAINER 3: MOCK TEST & QUIZ (Testbook CBT Style) -->
-      <section id="tabMockTest" class="tab-content-block" style="display:none;">
-        <div class="glass-card" style="border-color: rgba(16, 185, 129, 0.4);">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
+      // --- Permanent Device Session Load ---
+      useEffect(() => {
+        const savedSession = localStorage.getItem("ROY_DAR_SESSION");
+        if (savedSession) {
+          try {
+            const parsed = JSON.parse(savedSession);
+            if (parsed && parsed.id) setCurrentUser(parsed);
+          } catch (e) {
+            console.error("Session parse failed", e);
+          }
+        }
+      }, []);
+
+      // --- Firebase Live Listeners ---
+      useEffect(() => {
+        setIsSyncing(true);
+        const dataRef = db.ref("app_data");
+        dataRef.on("value", (snapshot) => {
+          setIsSyncing(false);
+          const data = snapshot.val();
+          if (data) {
+            if (data.settings) setAppSettings(data.settings);
+            if (data.folderTree) setFolderTree(data.folderTree);
+            if (data.students) setStudentsList(data.students);
+            if (data.mockTests) setMockTests(data.mockTests);
+          }
+        }, (error) => {
+          console.warn("Firebase sync offline, running in local cached mode.", error);
+          setIsSyncing(false);
+        });
+
+        return () => dataRef.off();
+      }, []);
+
+      // --- Master Admin Initialization in Firebase ---
+      useEffect(() => {
+        async function initAdmin() {
+          const passHash = await hashPassword("#Sayan@292003");
+          db.ref("app_data/settings/adminPhone").once("value", snap => {
+            if (!snap.exists()) {
+              db.ref("app_data/settings").set({
+                appName: "Roy dar Coaching",
+                tagline: "সরকারি চাকরির সেরা প্রস্তুতি",
+                logoUrl: DEFAULT_ACADEMY_LOGO,
+                adminPhone: "8436940359",
+                adminPassHash: passHash
+              });
+            }
+          });
+        }
+        initAdmin();
+      }, []);
+
+      // --- Authentication Handlers ---
+      const handleLogin = async (e) => {
+        e.preventDefault();
+        setErrorMsg("");
+
+        if (!loginId.trim() || !loginPass.trim()) {
+          setErrorMsg(lang === "bn" ? "আইডি ও পাসওয়ার্ড উভয়ই প্রয়োজন।" : "Both ID and Password are required.");
+          return;
+        }
+
+        const inputHash = await hashPassword(loginPass);
+
+        if (loginRole === "admin") {
+          const targetPhone = appSettings.adminPhone || "8436940359";
+          const defaultAdminHash = await hashPassword("#Sayan@292003");
+          const targetHash = appSettings.adminPassHash || defaultAdminHash;
+
+          if (loginId.trim() === targetPhone && inputHash === targetHash) {
+            const userObj = { role: "admin", id: targetPhone, name: "Admin" };
+            setCurrentUser(userObj);
+            localStorage.setItem("ROY_DAR_SESSION", JSON.stringify(userObj));
+            setLoginRole(null);
+            setLoginId("");
+            setLoginPass("");
+          } else {
+            setErrorMsg(lang === "bn" ? "ভুল অ্যাডমিন আইডি বা পাসওয়ার্ড।" : "Invalid Admin ID or Password.");
+          }
+        } else {
+          // Student Auth Check
+          const student = studentsList[loginId.trim()];
+          if (!student) {
+            setErrorMsg(lang === "bn" ? "স্টুডেন্ট আইডি পাওয়া যায়নি। অ্যাডমিনের সাথে যোগাযোগ করুন।" : "Student ID not found. Contact Admin.");
+            return;
+          }
+          if (student.isBlocked) {
+            setErrorMsg(t.blockedMsg);
+            return;
+          }
+          if (student.passHash === inputHash || loginPass === student.plainPassFallback) {
+            const userObj = { role: "student", id: loginId.trim(), name: student.name || "Student" };
+            setCurrentUser(userObj);
+            localStorage.setItem("ROY_DAR_SESSION", JSON.stringify(userObj));
+            setLoginRole(null);
+            setLoginId("");
+            setLoginPass("");
+          } else {
+            setErrorMsg(lang === "bn" ? "ভুল পাসওয়ার্ড।" : "Incorrect Password.");
+          }
+        }
+      };
+
+      const handleLogout = () => {
+        localStorage.removeItem("ROY_DAR_SESSION");
+        setCurrentUser(null);
+        setLoginRole(null);
+        setActiveTab("classes");
+      };
+                // --- Helper to get Current Active Folder in Breadcrumbs ---
+      const currentFolder = useMemo(() => {
+        let curr = folderTree;
+        for (const fId of folderBreadcrumb) {
+          const next = curr.children?.find(c => c.id === fId);
+          if (next) curr = next;
+        }
+        return curr;
+      }, [folderTree, folderBreadcrumb]);
+
+      // --- Mock Test Active State ---
+      const [activeTest, setActiveTest] = useState(null);
+      const [testAnswers, setTestAnswers] = useState({});
+      const [testSubmitted, setTestSubmitted] = useState(false);
+      const [testTimer, setTestTimer] = useState(300);
+
+      useEffect(() => {
+        let timer;
+        if (activeTest && !testSubmitted && testTimer > 0) {
+          timer = setInterval(() => setTestTimer(prev => prev - 1), 1000);
+        } else if (testTimer === 0 && !testSubmitted) {
+          setTestSubmitted(true);
+        }
+        return () => clearInterval(timer);
+      }, [activeTest, testSubmitted, testTimer]);
+
+      // ---------------- RENDER VIEWS ----------------
+
+      // View A: Header
+      const renderHeader = () => (
+        <header className="header-bar">
+          <div className="brand-wrap">
+            <img src={appSettings.logoUrl || DEFAULT_ACADEMY_LOGO} alt="Roy dar Coaching" className="brand-logo" />
             <div>
-              <span class="badge-subtle" style="background:rgba(16,185,129,0.2); color:#34d399;">TESTBOOK STYLE CBT</span>
-              <h3 style="font-size:15px; margin:4px 0;" id="txtMockTitle">WBP / SSC স্পেশাল ফুল মক টেস্ট</h3>
-              <p style="font-size:11px; color:var(--text-muted);" id="txtMockSubtitle">টাইমার এবং টেস্টবুক স্টাইল নেগেটিভ মার্কিং সহ</p>
+              <h1 className="brand-title">{appSettings.appName}</h1>
+              <p className="brand-sub">{appSettings.tagline}</p>
             </div>
-            <button class="primary-btn btn-gold" style="width:auto; padding:8px 16px; font-size:12px;" onclick="startTestbookMockExam()">
-              <i class="fa-solid fa-play"></i> <span id="btnStartMock">Start Test</span>
+          </div>
+          <div className="header-actions">
+            <button className="btn-chip" onClick={() => setLang(l => l === "bn" ? "en" : "bn")}>
+              🌐 {lang === "bn" ? "English" : "বাংলা"}
+            </button>
+            {currentUser && (
+              <button className="btn-logout" title={t.logout} onClick={handleLogout}>
+                ⏻
+              </button>
+            )}
+          </div>
+        </header>
+      );
+
+      // View B: Auth Landing Screen
+      if (!currentUser) {
+        return (
+          <div id="root">
+            {renderHeader()}
+            <main className="content-area" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <div className="glass-card" style={{ textAlign: 'center' }}>
+                <img src={appSettings.logoUrl || DEFAULT_ACADEMY_LOGO} style={{ width: 80, height: 80, borderRadius: '50%', border: '2px solid var(--accent-orange)', marginBottom: 12 }} />
+                <h2 style={{ fontSize: 20, fontWeight: 700, color: '#fff' }}>{appSettings.appName}</h2>
+                <p style={{ color: 'var(--accent-orange)', fontSize: 13, marginTop: 4 }}>{appSettings.tagline}</p>
+                <div style={{ background: 'rgba(255,153,0,0.1)', padding: '6px 12px', borderRadius: 20, display: 'inline-block', margin: '14px 0', border: '1px solid rgba(255,153,0,0.3)', color: '#ffaa00', fontSize: 12 }}>
+                  🔴 APP IS NOW LIVE! Online classes are active
+                </div>
+
+                {!loginRole ? (
+                  <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <button className="btn-primary" onClick={() => setLoginRole("student")}>
+                      🎓 {t.studentLogin} 🎓
+                    </button>
+                    <button className="btn-secondary" onClick={() => setLoginRole("admin")}>
+                      🔒 {t.adminLogin} 🔑
+                    </button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleLogin} style={{ marginTop: 14 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                      <h3 style={{ fontSize: 16, color: '#ffb703' }}>
+                        {loginRole === "admin" ? `🔑 ${t.adminLogin}` : `🎓 ${t.studentLogin}`}
+                      </h3>
+                      <button type="button" className="btn-chip" onClick={() => { setLoginRole(null); setErrorMsg(""); }}>
+                        ← {t.back}
+                      </button>
+                    </div>
+
+                    <div style={{ textAlign: 'left' }}>
+                      <label style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                        {loginRole === "admin" ? "Admin Mobile" : t.studentIdPlaceholder}
+                      </label>
+                      <input
+                        type="text"
+                        className="input-field"
+                        placeholder={loginRole === "admin" ? "8436940359" : t.studentIdPlaceholder}
+                        value={loginId}
+                        onChange={e => setLoginId(e.target.value)}
+                      />
+
+                      <label style={{ fontSize: 12, color: 'var(--text-muted)' }}>{t.passwordPlaceholder}</label>
+                      <input
+                        type="password"
+                        className="input-field"
+                        placeholder="••••••••"
+                        value={loginPass}
+                        onChange={e => setLoginPass(e.target.value)}
+                      />
+                    </div>
+
+                    {errorMsg && (
+                      <div style={{ color: '#f87171', fontSize: 12, background: 'rgba(239,68,68,0.15)', padding: 8, borderRadius: 8, marginBottom: 12 }}>
+                        {errorMsg}
+                      </div>
+                    )}
+
+                    <button type="submit" className="btn-primary">
+                      ➔] {t.proceedBtn}
+                    </button>
+                  </form>
+                )}
+              </div>
+            </main>
+          </div>
+        );
+      }
+
+      // View C: Student Dashboard - Tab 1 (Classes & Folders)
+      const renderClassesTab = () => (
+        <div>
+          <div className="glass-card" style={{ background: 'linear-gradient(135deg, rgba(20,40,80,0.9), rgba(10,20,40,0.95))' }}>
+            <span style={{ fontSize: 11, background: 'rgba(37,99,235,0.4)', padding: '3px 8px', borderRadius: 4, color: '#93c5fd', fontWeight: 600 }}>
+              ROY DAR COACHING PORTAL
+            </span>
+            <h2 style={{ fontSize: 18, marginTop: 8, color: '#fff' }}>
+              {t.welcome}, <span style={{ color: 'var(--accent-orange)' }}>{currentUser.name.toUpperCase()}</span>!
+            </h2>
+            <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>{t.targetExams}</p>
+          </div>
+
+          {/* Breadcrumbs */}
+          {folderBreadcrumb.length > 0 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12, overflowX: 'auto', paddingBottom: 4 }}>
+              <button
+                className="btn-chip"
+                onClick={() => setFolderBreadcrumb([])}
+                style={{ background: 'rgba(255,153,0,0.2)', color: 'var(--accent-orange)' }}
+              >
+                🏠 {t.tabClassNotes}
+              </button>
+              {folderBreadcrumb.map((fId, idx) => (
+                <span key={fId} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ color: 'var(--text-muted)', fontSize: 11 }}>/</span>
+                  <button
+                    className="btn-chip"
+                    onClick={() => setFolderBreadcrumb(prev => prev.slice(0, idx + 1))}
+                  >
+                    📂 {fId}
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Sub Folders */}
+          {currentFolder.children && currentFolder.children.map(sub => (
+            <div
+              key={sub.id}
+              className="folder-item"
+              onClick={() => setFolderBreadcrumb(prev => [...prev, sub.id])}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span style={{ fontSize: 24 }}>📁</span>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>{sub.name}</div>
+                  <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                    {sub.children?.length || 0} টি অধ্যায় (Chapters) • {sub.contents?.length || 0} টি নোটস/ক্লাস
+                  </div>
+                </div>
+              </div>
+              <span style={{ color: 'var(--text-muted)', fontSize: 16 }}>➔</span>
+            </div>
+          ))}
+
+          {/* Content Ingestion / Leaf Nodes */}
+          {currentFolder.contents && currentFolder.contents.map(item => (
+            <div key={item.id} className="glass-card" style={{ marginBottom: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                <span>{item.type === "video" ? "🎥" : "📑"}</span>
+                <span style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>{item.title}</span>
+              </div>
+              {item.type === "video" && (
+                <div className="video-container">
+                  <iframe
+                    src={getCleanYouTubeEmbed(item.url)}
+                    title={item.title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              )}
+              {item.type === "pdf" && (
+                <iframe
+                  src={getCleanDriveEmbed(item.url)}
+                  style={{ width: '100%', height: 260, borderRadius: 10, border: '1px solid var(--border-subtle)' }}
+                  title={item.title}
+                ></iframe>
+              )}
+            </div>
+          ))}
+        </div>
+      );
+
+      // View D: Testbook SuperCoaching Style Mock Tests
+      const renderMockTab = () => {
+        if (!activeTest) {
+          return (
+            <div>
+              <div className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h3 style={{ fontSize: 16, color: '#fff' }}>{lang === "bn" ? "মক টেস্ট ও প্র্যাকটিস সেট" : "Mock Tests & Practice"}</h3>
+                  <p style={{ fontSize: 11, color: 'var(--text-muted)' }}>Testbook স্টাইল লাইভ স্কোর ও অ্যানালাইসিস</p>
+                </div>
+                <span style={{ background: '#10b981', color: '#000', fontWeight: 700, padding: '3px 8px', borderRadius: 12, fontSize: 10 }}>
+                  ● LIVE
+                </span>
+              </div>
+
+              {mockTests.map(test => (
+                <div key={test.id} className="glass-card">
+                  <span style={{ fontSize: 10, color: 'var(--accent-orange)', fontWeight: 600, letterSpacing: 1 }}>TESTBOOK STYLE MOCK</span>
+                  <h4 style={{ fontSize: 15, margin: '6px 0 10px 0', color: '#fff' }}>{test.title}</h4>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                      {test.questions.length} টি প্রশ্ন • {test.durationMins || 5} মিনিট
+                    </span>
+                    <button
+                      className="btn-primary"
+                      style={{ width: 'auto', padding: '6px 14px', fontSize: 12 }}
+                      onClick={() => {
+                        setActiveTest(test);
+                        setTestAnswers({});
+                        setTestSubmitted(false);
+                        setTestTimer((test.durationMins || 5) * 60);
+                      }}
+                    >
+                      {t.startTest} ▶
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          );
+        }
+
+        // Active Test Interface
+        const minutes = Math.floor(testTimer / 60);
+        const seconds = testTimer % 60;
+        const totalMarks = activeTest.questions.length;
+        let obtainedMarks = 0;
+        if (testSubmitted) {
+          activeTest.questions.forEach((q, idx) => {
+            if (testAnswers[idx] === q.correctIndex) obtainedMarks++;
+          });
+        }
+
+        return (
+          <div className="glass-card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-subtle)', paddingBottom: 10, marginBottom: 12 }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{activeTest.title}</span>
+              <span style={{ fontSize: 13, color: testTimer < 60 ? '#ef4444' : 'var(--accent-orange)', fontWeight: 700 }}>
+                ⏳ {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+              </span>
+            </div>
+
+            {!testSubmitted ? (
+              <div>
+                {activeTest.questions.map((q, qIdx) => (
+                  <div key={q.id} style={{ marginBottom: 18, borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: 12 }}>
+                    <p style={{ fontSize: 13.5, fontWeight: 600, marginBottom: 10, color: '#fff' }}>
+                      {qIdx + 1}. {lang === "bn" ? q.text_bn : q.text_en}
+                    </p>
+                    {(lang === "bn" ? q.options_bn : q.options_en).map((opt, oIdx) => (
+                      <button
+                        key={oIdx}
+                        className={`option-btn ${testAnswers[qIdx] === oIdx ? 'selected' : ''}`}
+                        onClick={() => setTestAnswers(prev => ({ ...prev, [qIdx]: oIdx }))}
+                      >
+                        {String.fromCharCode(65 + oIdx)}. {opt}
+                      </button>
+                    ))}
+                  </div>
+                ))}
+                <button className="btn-primary" onClick={() => setTestSubmitted(true)}>
+                  ✓ {t.submitTest}
+                </button>
+              </div>
+            ) : (
+              <div>
+                <div style={{ textAlign: 'center', padding: '16px 0', borderBottom: '1px solid var(--border-subtle)', marginBottom: 14 }}>
+                  <h3 style={{ fontSize: 18, color: 'var(--accent-orange)' }}>🎉 {t.scoreCard}</h3>
+                  <div style={{ fontSize: 26, fontWeight: 700, color: '#fff', marginTop: 6 }}>
+                    {obtainedMarks} / {totalMarks}
+                  </div>
+                  <p style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                    {t.accuracy}: {Math.round((obtainedMarks / totalMarks) * 100)}%
+                  </p>
+                </div>
+
+                {activeTest.questions.map((q, qIdx) => (
+                  <div key={q.id} style={{ marginBottom: 14, background: 'rgba(0,0,0,0.2)', padding: 10, borderRadius: 8 }}>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: '#fff' }}>
+                      {qIdx + 1}. {lang === "bn" ? q.text_bn : q.text_en}
+                    </p>
+                    <p style={{ fontSize: 12, marginTop: 4, color: testAnswers[qIdx] === q.correctIndex ? '#34d399' : '#f87171' }}>
+                      তোমার উত্তর: {testAnswers[qIdx] !== undefined ? (lang === "bn" ? q.options_bn[testAnswers[qIdx]] : q.options_en[testAnswers[qIdx]]) : "দেওয়া হয়নি"}
+                    </p>
+                    <p style={{ fontSize: 12, color: '#38bdf8' }}>
+                      সঠিক উত্তর: {lang === "bn" ? q.options_bn[q.correctIndex] : q.options_en[q.correctIndex]}
+                    </p>
+                    {q.explanation && (
+                      <p style={{ fontSize: 11.5, color: '#cbd5e1', marginTop: 6, background: 'rgba(255,255,255,0.05)', padding: 6, borderRadius: 6 }}>
+                        💡 ব্যাখ্যা: {q.explanation}
+                      </p>
+                    )}
+                  </div>
+                ))}
+
+                <button className="btn-secondary" onClick={() => setActiveTest(null)}>
+                  ← {t.back}
+                </button>
+              </div>
+            )}
+          </div>
+        );
+      };
+          // View E: AI Sir (Gemini Doubt Tutor)
+      const [messages, setMessages] = useState([
+        { role: "ai", text: t.aiSirWelcome }
+      ]);
+      const [aiInput, setAiInput] = useState("");
+      const [isAiLoading, setIsAiLoading] = useState(false);
+      const chatEndRef = useRef(null);
+
+      useEffect(() => {
+        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, [messages]);
+
+      const handleAskAi = async (promptText) => {
+        const query = promptText || aiInput;
+        if (!query.trim() || isAiLoading) return;
+
+        setMessages(prev => [...prev, { role: "user", text: query }]);
+        if (!promptText) setAiInput("");
+        setIsAiLoading(true);
+
+        const systemPrompt = `You are 'AI Sir', a knowledgeable and polite academic exam tutor at 'Roy dar Coaching' in West Bengal. Provide structured, accurate, step-by-step explanations in Bengali and English for competitive exams like WBP, WBPSC, SSC, and Railway. Highlight short tricks, years, and historical facts directly.`;
+
+        try {
+          const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [
+                {
+                  parts: [
+                    { text: systemPrompt },
+                    { text: query }
+                  ]
+                }
+              ]
+            })
+          });
+
+          const data = await response.json();
+          const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "দুঃখিত, উত্তরটি প্রস্তুত করা যায়নি। আবার চেষ্টা করুন।";
+          setMessages(prev => [...prev, { role: "ai", text: reply }]);
+        } catch (error) {
+          setMessages(prev => [...prev, { role: "ai", text: "AI স্যার এই মুহূর্তে অফলাইনে রয়েছেন। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।" }]);
+        } finally {
+          setIsAiLoading(false);
+        }
+      };
+
+      const renderAiTab = () => (
+        <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 150px)' }}>
+          <div className="glass-card" style={{ padding: 10, marginBottom: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 20 }}>🤖</span>
+              <div>
+                <h4 style={{ fontSize: 13, color: 'var(--accent-orange)', fontWeight: 700 }}>
+                  {appSettings.appName} AI স্যার (Google Gemini)
+                </h4>
+                <p style={{ fontSize: 10, color: 'var(--text-muted)' }}>২৪/৭ ডাউট ক্লিয়ারিং ও শর্টকাট ট্রিকস</p>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 6 }}>
+            {["মৌর্য সাম্রাজ্য সংক্ষেপে বোঝাও", "হরপ্পা সভ্যতার আবিষ্কারক কে?", "লাভ ক্ষতির শর্টকাট সূত্র"].map((chip, idx) => (
+              <button
+                key={idx}
+                className="btn-chip"
+                style={{ whiteSpace: 'nowrap', fontSize: 11 }}
+                onClick={() => handleAskAi(chip)}
+              >
+                {chip}
+              </button>
+            ))}
+          </div>
+
+          <div style={{ flex: 1, overflowY: 'auto', padding: '10px 0' }}>
+            {messages.map((m, i) => (
+              <div key={i} className={`chat-bubble ${m.role === 'user' ? 'chat-user' : 'chat-ai'}`}>
+                {m.text}
+              </div>
+            ))}
+            {isAiLoading && (
+              <div className="chat-bubble chat-ai" style={{ color: 'var(--accent-orange)' }}>
+                AI স্যার লিখছেন... ⏳
+              </div>
+            )}
+            <div ref={chatEndRef} />
+          </div>
+
+          <div style={{ display: 'flex', gap: 8, paddingTop: 8 }}>
+            <input
+              type="text"
+              className="input-field"
+              style={{ margin: 0 }}
+              placeholder={t.askPlaceholder}
+              value={aiInput}
+              onChange={e => setAiInput(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && handleAskAi()}
+            />
+            <button className="btn-primary" style={{ width: 'auto', padding: '0 16px' }} onClick={() => handleAskAi()}>
+              ➔
             </button>
           </div>
         </div>
-        <div id="allMockTestsList"></div>
-      </section>
+      );
 
-      <!-- TAB CONTAINER 4: AI DOUBT SUPPORT (Google Gemini Flash 1.5) -->
-      <section id="tabAIDoubt" class="tab-content-block" style="display:none;">
-        <div class="chat-container">
-          <div style="padding:10px 14px; background:rgba(30,58,110,0.5); font-size:12px; font-weight:600; display:flex; align-items:center; gap:8px;">
-            <i class="fa-solid fa-robot" style="color:var(--accent-gold);"></i> 
-            <span id="txtAITitle">রয় দার AI স্যার (Powered by Google Gemini)</span>
-          </div>
-          <div class="chat-messages" id="chatMessages">
-            <div class="chat-bubble bubble-bot">
-              👋 নমস্কার! আমি <b>Roy dar Coaching</b>-এর AI শিক্ষক। অংক, জিকে, সায়েন্স বা কারেন্ট অ্যাফেয়ার্স নিয়ে যেকোনো প্রশ্ন করো!
-            </div>
-          </div>
-          <div class="chat-input-bar">
-            <input type="text" id="aiUserInput" placeholder="এখানে তোমার প্রশ্ন লেখো..." onkeypress="if(event.key==='Enter') sendGeminiQuery()">
-            <button class="send-icon-btn" onclick="sendGeminiQuery()"><i class="fa-solid fa-paper-plane"></i></button>
-          </div>
-        </div>
-      </section>
+      // View F: Admin Management Suite
+      const [newStudentPhone, setNewStudentPhone] = useState("");
+      const [newStudentName, setNewStudentName] = useState("");
+      const [newStudentPass, setNewStudentPass] = useState("");
+      const [newFolderName, setNewFolderName] = useState("");
+      const [newLogoUrl, setNewLogoUrl] = useState("");
 
-      <!-- TAB CONTAINER 5: SHORTS & REELS (Quick Revision) -->
-      <section id="tabReels" class="tab-content-block" style="display:none;">
-        <div style="font-size:13px; font-weight:600; color:#93c5fd; margin-bottom:10px;">
-          <i class="fa-solid fa-bolt"></i> <span id="txtReelsHeader">১ মিনিটের শর্ট রিভিশন (Quick Revision Tricks)</span>
-        </div>
-        <div id="reelsContainer"></div>
-      </section>
-    </main>
-
-    <!-- BOTTOM FIXED TAB BAR -->
-    <nav class="bottom-tab-bar" id="bottomNavBar" style="display:none;">
-      <button class="tab-btn active" onclick="switchMainTab('foundation', null, 0)">
-        <i class="fa-solid fa-folder-open"></i>
-        <span id="bNav1">ক্লাস ও নোটস</span>
-      </button>
-      <button class="tab-btn" onclick="switchMainTab('mocktest', null, 1)">
-        <i class="fa-solid fa-clipboard-check"></i>
-        <span id="bNav2">মক টেস্ট</span>
-      </button>
-      <button class="tab-btn" onclick="switchMainTab('aidoubt', null, 2)">
-        <i class="fa-solid fa-robot"></i>
-        <span id="bNav3">AI স্যার</span>
-      </button>
-      <button class="tab-btn" onclick="switchMainTab('reels', null, 3)">
-        <i class="fa-solid fa-video"></i>
-        <span id="bNav4">শর্টস</span>
-      </button>
-      <button class="tab-btn" onclick="logoutSession()">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-        <span id="bNav5">লগআউট</span>
-      </button>
-    </nav>
-
-  </div>
-
-  <!-- MODAL: ADMIN ACCESS & CMS CONTROL -->
-  <div id="adminModal" class="modal-backdrop">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h3 style="color:var(--accent-gold); font-size:16px;"><i class="fa-solid fa-shield-halved"></i> Admin Control Panel</h3>
-        <button class="close-btn" onclick="closeAdminModal()">&times;</button>
-      </div>
-
-      <!-- Admin Login Form (if not logged in) -->
-      <div id="adminLoginForm">
-        <div class="input-group">
-          <label class="input-label">Admin ID / Phone</label>
-          <input type="text" id="adminIdInput" class="input-field" placeholder="Admin Mobile Number">
-        </div>
-        <div class="input-group">
-          <label class="input-label">Admin Password</label>
-          <input type="password" id="adminPassInput" class="input-field" placeholder="Admin Password">
-        </div>
-        <button class="primary-btn btn-gold" onclick="executeAdminLogin()">
-          <i class="fa-solid fa-lock-open"></i> LOGIN AS ADMIN
-        </button>
-      </div>
-
-      <!-- Admin Management Portal (if authorized) -->
-      <div id="adminDashboard" style="display:none;">
-        <div id="cloudStatusBadge" class="cloud-status-badge status-offline">
-          <i class="fa-solid fa-circle"></i> <span>Checking Cloud Sync...</span>
-        </div>
-
-        <div style="display:flex; gap:8px; margin-bottom:14px;">
-          <button class="pill-btn" onclick="switchAdminTab('content')"><i class="fa-solid fa-plus"></i> Upload Class/Notes</button>
-          <button class="pill-btn" onclick="switchAdminTab('students')"><i class="fa-solid fa-users"></i> Students</button>
-          <button class="pill-btn" onclick="switchAdminTab('firebase')"><i class="fa-solid fa-cloud"></i> Firebase Setup</button>
-        </div>
-
-        <!-- Sub Tab: Add Content -->
-        <div id="adminTabContent">
-          <div class="input-group">
-            <label class="input-label">Select Subject (7 Parts)</label>
-            <select id="adminContentSubject" class="input-field">
-              <option value="Bengali">Bengali (বাংলা)</option>
-              <option value="English">English</option>
-              <option value="Math">Math (গণিত)</option>
-              <option value="GK">General Studies (GK)</option>
-              <option value="GS">General Science (GS)</option>
-              <option value="Reasoning">Reasoning</option>
-              <option value="CA">Current Affairs & Others</option>
-            </select>
-          </div>
-          <div class="input-group">
-            <label class="input-label">Folder / Chapter Name</label>
-            <input type="text" id="adminChapterName" class="input-field" placeholder="e.g. Ancient Indian History - Indus Valley">
-          </div>
-          <div class="input-group">
-            <label class="input-label">Resource Type</label>
-            <select id="adminContentType" class="input-field">
-              <option value="video">YouTube Video Lecture</option>
-              <option value="notes">Google Drive PDF / Notes</option>
-            </select>
-          </div>
-          <div class="input-group">
-            <label class="input-label">Lesson Title</label>
-            <input type="text" id="adminLessonTitle" class="input-field" placeholder="e.g. হরপ্পা ও মহেঞ্জোদারো বিস্তারিত ক্লাস">
-          </div>
-          <div class="input-group">
-            <label class="input-label">URL / Link (YouTube or Google Drive)</label>
-            <input type="text" id="adminLessonURL" class="input-field" placeholder="https://youtube.com/... or https://drive.google.com/...">
-          </div>
-          <button class="primary-btn btn-gold" onclick="adminPublishContent()">
-            <i class="fa-solid fa-cloud-arrow-up"></i> PUBLISH TO ALL STUDENTS
-          </button>
-        </div>
-
-        <!-- Sub Tab: Student Management -->
-        <div id="adminTabStudents" style="display:none;">
-          <h4 style="font-size:13px; color:#93c5fd; margin-bottom:8px;">Generate New Student Login</h4>
-          <div class="input-group">
-            <label class="input-label">Student Mobile / ID</label>
-            <input type="text" id="adminNewStuId" class="input-field" placeholder="e.g. 9876543210">
-          </div>
-          <div class="input-group">
-            <label class="input-label">Student Name</label>
-            <input type="text" id="adminNewStuName" class="input-field" placeholder="Student Full Name">
-          </div>
-          <div class="input-group">
-            <label class="input-label">Set Password</label>
-            <input type="password" id="adminNewStuPass" class="input-field" placeholder="Temporary or fixed password">
-          </div>
-          <button class="primary-btn btn-gold" onclick="adminCreateStudent()">
-            <i class="fa-solid fa-user-plus"></i> CREATE & SYNC STUDENT ID
-          </button>
-          
-          <h4 style="font-size:13px; color:#93c5fd; margin:16px 0 8px;">Authorized Students List</h4>
-          <div id="adminStudentListView" style="max-height:180px; overflow-y:auto;"></div>
-        </div>
-
-        <!-- Sub Tab: Firebase Keys Setup -->
-        <div id="adminTabFirebase" style="display:none;">
-          <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">
-            Firebase কনসোল থেকে পাওয়া কনফিগারেশন কী-গুলো এখানে পেস্ট করে সরাসরি সেভ করতে পারেন:
-          </p>
-          <div class="input-group">
-            <label class="input-label">Firebase API Key</label>
-            <input type="text" id="fbApiKeyInput" class="input-field">
-          </div>
-          <div class="input-group">
-            <label class="input-label">Firebase Project ID</label>
-            <input type="text" id="fbProjectIdInput" class="input-field">
-          </div>
-          <button class="primary-btn btn-gold" onclick="saveCustomFirebaseConfig()">
-            <i class="fa-solid fa-floppy-disk"></i> SAVE & CONNECT FIREBASE
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-    <!-- MODAL: CHANGE PASSWORD -->
-  <div id="changePassModal" class="modal-backdrop">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h3 style="color:var(--accent-gold); font-size:16px;"><i class="fa-solid fa-key"></i> <span id="txtChangePassTitle">Change Password</span></h3>
-        <button class="close-btn" onclick="closeChangePasswordModal()">&times;</button>
-      </div>
-      <div class="input-group">
-        <label class="input-label" id="lblCpId">Registered Student ID</label>
-        <input type="text" id="cpUserId" class="input-field" placeholder="Your Registered ID">
-      </div>
-      <div class="input-group">
-        <label class="input-label" id="lblCpOld">Current / Old Password</label>
-        <input type="password" id="cpOldPass" class="input-field" placeholder="Enter Old Password">
-      </div>
-      <div class="input-group">
-        <label class="input-label" id="lblCpNew">New Password</label>
-        <input type="password" id="cpNewPass" class="input-field" placeholder="Enter New Password">
-      </div>
-      <button class="primary-btn btn-gold" onclick="executeChangePassword()">
-        <i class="fa-solid fa-check"></i> <span id="btnSubmitNewPass">UPDATE PASSWORD</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- JAVASCRIPT LOGIC & FIREBASE CLOUD CONTROLLER -->
-  <script>
-    // ==========================================
-    // 1. FIREBASE CONFIGURATION (REPLACE WITH YOUR KEYS)
-    // ==========================================
-    // firebase.google.com theke pawa apnar nijer credentials ekhane boshate paren:
-    let firebaseConfig = {
-      apiKey: localStorage.getItem('roy_fb_apiKey') || "AIzaSyDummyKeyReplaceWithYours",
-      authDomain: "roy-dar-coaching.firebaseapp.com",
-      projectId: localStorage.getItem('roy_fb_projectId') || "roy-dar-coaching",
-      storageBucket: "roy-dar-coaching.appspot.com",
-      messagingSenderId: "1234567890",
-      appId: "1:1234567890:web:abcdef123456"
-    };
-
-    let db = null;
-    let isCloudConnected = false;
-
-    function initFirebaseService() {
-      try {
-        if (!firebase.apps.length) {
-          firebase.initializeApp(firebaseConfig);
-        }
-        db = firebase.firestore();
-        isCloudConnected = true;
-        updateCloudStatusUI(true);
-        listenToCloudData();
-      } catch (e) {
-        console.warn("Running in Hybrid Local Storage mode until Firebase credentials are set.", e);
-        isCloudConnected = false;
-        updateCloudStatusUI(false);
-      }
-    }
-
-    function updateCloudStatusUI(online) {
-      const badge = document.getElementById('cloudStatusBadge');
-      if (!badge) return;
-      if (online) {
-        badge.className = "cloud-status-badge status-online";
-        badge.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Firebase Cloud Connected (Realtime Sync Live)';
-      } else {
-        badge.className = "cloud-status-badge status-offline";
-        badge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Local Storage Mode (Firebase Setup needed)';
-      }
-    }
-
-    // ==========================================
-    // 2. STATE & DEFAULT SEED DATA
-    // ==========================================
-    let currentLang = 'bn';
-    let currentUser = null;
-    let isAdminLoggedIn = false;
-
-    // Secure Admin Credential verification
-    const ADMIN_TARGET_ID = "8436940359";
-    const ADMIN_PASS_HASH = "32ca8bfd3ce720745582f04ce4bf3e26bb26df8018e698888b1fc910b86551b9"; // SHA256 of #Sayan@007
-
-    // 7 Core Subject Definitions
-    const SUBJECT_CATEGORIES = [
-      { id: "Bengali", nameBn: "বাংলা সাহিত্য ও ব্যাকরণ", nameEn: "Bengali Language & Literature", icon: "fa-book" },
-      { id: "English", nameBn: "ইংরেজি ব্যাকরণ ও ভোকাবুলারি", nameEn: "English Grammar & Vocabulary", icon: "fa-spell-check" },
-      { id: "Math", nameBn: "পাটিগণিত ও অ্যাডভান্স গণিত", nameEn: "Mathematics (Aptitude & Adv)", icon: "fa-calculator" },
-      { id: "GK", nameBn: "জেনারেল স্টাডিজ (ইতিহাস, ভূগোল, সংবিধান)", nameEn: "General Studies (GK)", icon: "fa-landmark" },
-      { id: "GS", nameBn: "জেনারেল সায়েন্স (ফিজিক্স, কেমিস্ট্রি, বায়োলজি)", nameEn: "General Science (GS)", icon: "fa-flask" },
-      { id: "Reasoning", nameBn: "রিজনিং ও জিআই (Logical GI)", nameEn: "Reasoning & Mental Ability", icon: "fa-brain" },
-      { id: "CA", nameBn: "কারেন্ট অ্যাফেয়ার্স ও স্ট্যাটিক জিকে", nameEn: "Current Affairs & Static GK", icon: "fa-newspaper" }
-    ];
-
-    // Content Store (Synchronized from Firebase Cloud or local fallback)
-    let appContent = JSON.parse(localStorage.getItem('roy_content')) || [
-      {
-        id: "c1",
-        subject: "GK",
-        chapter: "প্রাচীন ভারতীয় ইতিহাস",
-        type: "video",
-        title: "হরপ্পা ও মহেঞ্জোদারো সভ্যতা - সম্পূর্ণ আলোচনা",
-        url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-      },
-      {
-        id: "c2",
-        subject: "GK",
-        chapter: "প্রাচীন ভারতীয় ইতিহাস",
-        type: "notes",
-        title: "Indus Valley Civilization Master Handwritten Notes",
-        url: "https://drive.google.com"
-      },
-      {
-        id: "c3",
-        subject: "Math",
-        chapter: "সরল সুদকষা (Simple Interest)",
-        type: "video",
-        title: "Simple Interest শর্টকাট টেকনিক ও বিগত বছরের প্রশ্ন",
-        url: "https://www.youtube.com"
-      }
-    ];
-
-    let registeredStudents = JSON.parse(localStorage.getItem('roy_students')) || [
-      { id: "6296388399", name: "Sayan Roy", passHash: hashStringSync("student123") }
-    ];
-
-    // ==========================================
-    // 3. CLOUD REALTIME LISTENERS (FIREBASE)
-    // ==========================================
-    function listenToCloudData() {
-      if (!isCloudConnected || !db) return;
-
-      // 1. Listen to Course Content
-      db.collection("course_content").onSnapshot((snapshot) => {
-        if (!snapshot.empty) {
-          const cloudContent = [];
-          snapshot.forEach((doc) => {
-            const data = doc.data();
-            data.id = doc.id;
-            cloudContent.push(data);
-          });
-          appContent = cloudContent;
-          localStorage.setItem('roy_content', JSON.stringify(appContent));
-          renderSubjectFolders();
-        }
-      }, (err) => console.log("Firebase sync fallback:", err));
-
-      // 2. Listen to Students
-      db.collection("students").onSnapshot((snapshot) => {
-        if (!snapshot.empty) {
-          const cloudStudents = [];
-          snapshot.forEach((doc) => {
-            cloudStudents.push(doc.data());
-          });
-          registeredStudents = cloudStudents;
-          localStorage.setItem('roy_students', JSON.stringify(registeredStudents));
-          renderAdminStudentList();
-        }
-      }, (err) => console.log("Students cloud sync:", err));
-    }
-
-    // ==========================================
-    // 4. CRYPTO & SECURITY GUARDS
-    // ==========================================
-    function hashStringSync(str) {
-      let hash = 0;
-      for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash |= 0;
-      }
-      return 'h_' + Math.abs(hash).toString(16);
-    }
-
-    // Anti-Inspect Guards
-    document.addEventListener('contextmenu', (e) => e.preventDefault());
-    document.addEventListener('keydown', (e) => {
-      if (
-        e.key === 'F12' ||
-        (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) ||
-        (e.ctrlKey && ['U','S'].includes(e.key.toUpperCase()))
-      ) {
+      const handleAddStudent = async (e) => {
         e.preventDefault();
-      }
-    });
-
-    // ==========================================
-    // 5. AUTHENTICATION & LOGIN FLOW
-    // ==========================================
-    function showStudentLoginForm() {
-      switchScreen('screenStudentLogin');
-    }
-
-    function executeStudentLogin() {
-      const id = document.getElementById('studentIdInput').value.trim();
-      const pass = document.getElementById('studentPassInput').value.trim();
-
-      if (!id || !pass) {
-        showToast("দয়া করে Student ID ও পাসওয়ার্ড লিখুন!");
-        return;
-      }
-
-      const foundStudent = registeredStudents.find(s => s.id === id);
-
-      if (foundStudent) {
-        const inputHash = hashStringSync(pass);
-        // Direct match or standard hash match
-        if (foundStudent.passHash === inputHash || pass === "student123" || foundStudent.rawPass === pass) {
-          currentUser = foundStudent;
-          document.getElementById('portalUserName').innerText = (currentLang === 'bn' ? "স্বাগতম, " : "Welcome, ") + (foundStudent.name || foundStudent.id);
-          switchScreen('screenMainApp');
-          document.getElementById('bottomNavBar').style.display = 'flex';
-          renderSubjectFolders();
-          showToast("সফলভাবে লগইন হয়েছে!");
-          return;
-        }
-      }
-
-      showToast("ভুল আইডি বা পাসওয়ার্ড! অ্যাডমিনের সাথে যোগাযোগ করুন।");
-    }
-
-    function executeAdminLogin() {
-      const id = document.getElementById('adminIdInput').value.trim();
-      const pass = document.getElementById('adminPassInput').value.trim();
-
-      if (id === ADMIN_TARGET_ID && pass === "#Sayan@007") {
-        isAdminLoggedIn = true;
-        document.getElementById('adminLoginForm').style.display = 'none';
-        document.getElementById('adminDashboard').style.display = 'block';
-        renderAdminStudentList();
-        showToast("অ্যাডমিন লগইন সফল হয়েছে!");
-      } else {
-        showToast("ভুল অ্যাডমিন আইডি বা পাসওয়ার্ড!");
-      }
-    }
-
-    function openAdminModal() {
-      document.getElementById('adminModal').classList.add('show');
-      if (isAdminLoggedIn) {
-        document.getElementById('adminLoginForm').style.display = 'none';
-        document.getElementById('adminDashboard').style.display = 'block';
-      } else {
-        document.getElementById('adminLoginForm').style.display = 'block';
-        document.getElementById('adminDashboard').style.display = 'none';
-      }
-    }
-
-    function closeAdminModal() {
-      document.getElementById('adminModal').classList.remove('show');
-    }
-
-    function logoutSession() {
-      currentUser = null;
-      document.getElementById('bottomNavBar').style.display = 'none';
-      switchScreen('screenLanding');
-      showToast("লগআউট সম্পন্ন হয়েছে।");
-    }
-
-    // ==========================================
-    // 6. ADMIN CMS ACTIONS & FIREBASE UPLOAD
-    // ==========================================
-    function switchAdminTab(tab) {
-      document.getElementById('adminTabContent').style.display = (tab === 'content' ? 'block' : 'none');
-      document.getElementById('adminTabStudents').style.display = (tab === 'students' ? 'block' : 'none');
-      document.getElementById('adminTabFirebase').style.display = (tab === 'firebase' ? 'block' : 'none');
-    }
-
-    function adminPublishContent() {
-      const subject = document.getElementById('adminContentSubject').value;
-      const chapter = document.getElementById('adminChapterName').value.trim();
-      const type = document.getElementById('adminContentType').value;
-      const title = document.getElementById('adminLessonTitle').value.trim();
-      const url = document.getElementById('adminLessonURL').value.trim();
-
-      if (!chapter || !title || !url) {
-        showToast("সবগুলো ঘর পূরণ করুন!");
-        return;
-      }
-
-      const newContentItem = {
-        subject, chapter, type, title, url,
-        createdAt: new Date().toISOString()
+        if (!newStudentPhone || !newStudentPass) return;
+        const passHash = await hashPassword(newStudentPass);
+        db.ref(`app_data/students/${newStudentPhone}`).set({
+          name: newStudentName || "Student",
+          phone: newStudentPhone,
+          passHash: passHash,
+          plainPassFallback: newStudentPass,
+          isBlocked: false
+        });
+        setNewStudentPhone("");
+        setNewStudentName("");
+        setNewStudentPass("");
+        alert("Student Added Successfully!");
       };
 
-      // Upload to Firebase Cloud if connected
-      if (isCloudConnected && db) {
-        db.collection("course_content").add(newContentItem)
-          .then(() => {
-            showToast("ক্লাস সফলভাবে ক্লাউডে আপলোড হয়েছে!");
-          })
-          .catch((err) => {
-            console.error(err);
-            saveContentLocally(newContentItem);
-          });
-      } else {
-        saveContentLocally(newContentItem);
-      }
-
-      // Reset fields
-      document.getElementById('adminChapterName').value = '';
-      document.getElementById('adminLessonTitle').value = '';
-      document.getElementById('adminLessonURL').value = '';
-    }
-
-    function saveContentLocally(item) {
-      item.id = 'loc_' + Date.now();
-      appContent.push(item);
-      localStorage.setItem('roy_content', JSON.stringify(appContent));
-      renderSubjectFolders();
-      showToast("কন্টেন্ট সেভ হয়েছে (Local Mode)!");
-    }
-
-    function adminCreateStudent() {
-      const id = document.getElementById('adminNewStuId').value.trim();
-      const name = document.getElementById('adminNewStuName').value.trim();
-      const pass = document.getElementById('adminNewStuPass').value.trim();
-
-      if (!id || !name || !pass) {
-        showToast("ছাত্রের ID, নাম ও পাসওয়ার্ড দিন!");
-        return;
-      }
-
-      const studentData = {
-        id: id,
-        name: name,
-        passHash: hashStringSync(pass),
-        rawPass: pass
+      const handleToggleBlock = (phone, currentStatus) => {
+        db.ref(`app_data/students/${phone}/isBlocked`).set(!currentStatus);
       };
 
-      if (isCloudConnected && db) {
-        db.collection("students").doc(id).set(studentData)
-          .then(() => {
-            showToast("স্টুডেন্ট ক্লাউডে রেজিস্টার হয়েছে!");
-          })
-          .catch(() => saveStudentLocally(studentData));
-      } else {
-        saveStudentLocally(studentData);
-      }
-
-      document.getElementById('adminNewStuId').value = '';
-      document.getElementById('adminNewStuName').value = '';
-      document.getElementById('adminNewStuPass').value = '';
-    }
-
-    function saveStudentLocally(student) {
-      registeredStudents.push(student);
-      localStorage.setItem('roy_students', JSON.stringify(registeredStudents));
-      renderAdminStudentList();
-      showToast("স্টুডেন্ট লোকালি তৈরি করা হয়েছে!");
-    }
-
-    function renderAdminStudentList() {
-      const container = document.getElementById('adminStudentListView');
-      if (!container) return;
-      container.innerHTML = registeredStudents.map(s => `
-        <div style="background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:8px; margin-bottom:6px; display:flex; justify-content:space-between; font-size:12px;">
-          <div><b>${s.name || s.id}</b> (${s.id})</div>
-          <span style="color:#34d399;"><i class="fa-solid fa-check"></i> Active</span>
-        </div>
-      `).join('');
-    }
-
-    function saveCustomFirebaseConfig() {
-      const k = document.getElementById('fbApiKeyInput').value.trim();
-      const p = document.getElementById('fbProjectIdInput').value.trim();
-      if (!k || !p) {
-        showToast("API Key এবং Project ID পূরণ করুন!");
-        return;
-      }
-      localStorage.setItem('roy_fb_apiKey', k);
-      localStorage.setItem('roy_fb_projectId', p);
-      showToast("Firebase Config সংরক্ষিত হয়েছে! পেজ রিলোড হচ্ছে...");
-      setTimeout(() => location.reload(), 1200);
-    }
-
-    // ==========================================
-    // 7. FOLDERS & CONTENT RENDERING
-    // ==========================================
-    function renderSubjectFolders() {
-      const container = document.getElementById('subjectListContainer');
-      if (!container) return;
-
-      container.innerHTML = SUBJECT_CATEGORIES.map(sub => {
-        const count = appContent.filter(c => c.subject === sub.id).length;
-        const name = currentLang === 'bn' ? sub.nameBn : sub.nameEn;
-        return `
-          <div class="folder-item" onclick="openSubjectLessons('${sub.id}')">
-            <div class="folder-left">
-              <div class="folder-icon">
-                <i class="fa-solid ${sub.icon}"></i>
-              </div>
-              <div>
-                <div class="folder-title">${name}</div>
-                <div class="folder-sub">${count} টি অধ্যায় ও লেকচার</div>
-              </div>
-            </div>
-            <i class="fa-solid fa-chevron-right" style="color:var(--text-muted); font-size:12px;"></i>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function openSubjectLessons(subjectId) {
-      const lessons = appContent.filter(c => c.subject === subjectId);
-      const container = document.getElementById('subjectListContainer');
-      const subInfo = SUBJECT_CATEGORIES.find(s => s.id === subjectId);
-      const name = currentLang === 'bn' ? subInfo.nameBn : subInfo.nameEn;
-
-      let html = `
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-          <button class="pill-btn" onclick="renderSubjectFolders()"><i class="fa-solid fa-arrow-left"></i> সব বিষয়</button>
-          <span style="font-size:13px; font-weight:600; color:var(--accent-gold);">${name}</span>
-        </div>
-      `;
-
-      if (lessons.length === 0) {
-        html += `<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:13px;">কোনো ক্লাস বা নোটস এখনো আপলোড করা হয়নি।</div>`;
-      } else {
-        html += lessons.map(item => `
-          <div class="folder-item" onclick="launchResource('${item.url}', '${item.type}')">
-            <div class="folder-left">
-              <div class="folder-icon ${item.type}">
-                <i class="fa-solid ${item.type === 'video' ? 'fa-play' : 'fa-file-pdf'}"></i>
-              </div>
-              <div>
-                <div class="folder-title">${item.title}</div>
-                <div class="folder-sub">${item.chapter} • ${item.type.toUpperCase()}</div>
-              </div>
-            </div>
-            <i class="fa-solid fa-arrow-up-right-from-square" style="color:var(--text-muted); font-size:13px;"></i>
-          </div>
-        `).join('');
-      }
-
-      container.innerHTML = html;
-    }
-
-    function launchResource(url, type) {
-      if (url.includes("youtube.com") || url.includes("youtu.be")) {
-        window.open(url, '_blank');
-      } else {
-        window.open(url, '_blank');
-      }
-    }
-
-    // ==========================================
-    // 8. TESTBOOK STYLE MOCK EXAM & CBT ENGINE
-    // ==========================================
-    function startTestbookMockExam() {
-      alert("টেস্টবুক স্টাইল মক টেস্ট শুরু হচ্ছে...\nসময়: ১০ মিনিট | পূর্ণমান: ২০ | নেগেটিভ মার্কিং: -০.২৫");
-      // Simulated interactive Testbook CBT
-      const score = 18;
-      showToast("মক টেস্ট সমাপ্ত! আপনার স্কোর: " + score + " / ২০ (Accuracy: 90%)");
-    }
-
-    // ==========================================
-    // 9. GOOGLE GEMINI AI DOUBT SOLVER
-    // ==========================================
-    async function sendGeminiQuery() {
-      const input = document.getElementById('aiUserInput');
-      const text = input.value.trim();
-      if (!text) return;
-
-      const chatBox = document.getElementById('chatMessages');
-      
-      // Append user bubble
-      const userBubble = document.createElement('div');
-      userBubble.className = "chat-bubble bubble-user";
-      userBubble.innerText = text;
-      chatBox.appendChild(userBubble);
-      input.value = '';
-      chatBox.scrollTop = chatBox.scrollHeight;
-
-      // Bot loading bubble
-      const botBubble = document.createElement('div');
-      botBubble.className = "chat-bubble bubble-bot";
-      botBubble.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Roy dar AI ভাবছে...';
-      chatBox.appendChild(botBubble);
-      chatBox.scrollTop = chatBox.scrollHeight;
-
-      try {
-        // Direct Free Fallback AI Response Simulation
-        setTimeout(() => {
-          botBubble.innerHTML = `<b>উত্তর:</b> সরকারি চাকরির পরীক্ষার নিয়ম অনুযায়ী '${text}'-এর বিষয়ে নিয়মিত রিভিশন ও ট্রিকস অনুসরণ করুন। রয় দার ক্লাসের নোটস ফলো করলে সহজে সমাধান করতে পারবে!`;
-          chatBox.scrollTop = chatBox.scrollHeight;
-        }, 800);
-      } catch (e) {
-        botBubble.innerText = "সংযোগ স্থাপন করা সম্ভব হয়নি। আবার চেষ্টা করো।";
-      }
-    }
-
-    // ==========================================
-    // 10. PASSWORD RESET MODAL & WORKFLOW
-    // ==========================================
-    function openChangePasswordModal(type) {
-      document.getElementById('changePassModal').classList.add('show');
-    }
-
-    function closeChangePasswordModal() {
-      document.getElementById('changePassModal').classList.remove('show');
-    }
-
-    function executeChangePassword() {
-      const id = document.getElementById('cpUserId').value.trim();
-      const oldP = document.getElementById('cpOldPass').value.trim();
-      const newP = document.getElementById('cpNewPass').value.trim();
-
-      if (!id || !oldP || !newP) {
-        showToast("সবগুলো ঘর পূরণ করুন!");
-        return;
-      }
-
-      const stu = registeredStudents.find(s => s.id === id);
-      if (stu) {
-        stu.passHash = hashStringSync(newP);
-        stu.rawPass = newP;
-        localStorage.setItem('roy_students', JSON.stringify(registeredStudents));
-        
-        if (isCloudConnected && db) {
-          db.collection("students").doc(id).update({
-            passHash: stu.passHash,
-            rawPass: newP
-          });
+      const handleAddSubFolder = () => {
+        if (!newFolderName.trim()) return;
+        const newChild = {
+          id: "f-" + Date.now(),
+          name: newFolderName.trim(),
+          children: [],
+          contents: []
+        };
+        const updated = JSON.parse(JSON.stringify(folderTree));
+        let curr = updated;
+        for (const fId of folderBreadcrumb) {
+          curr = curr.children?.find(c => c.id === fId);
         }
-        
-        showToast("পাসওয়ার্ড সফলভাবে পরিবর্তিত হয়েছে!");
-        closeChangePasswordModal();
-      } else {
-        showToast("এই আইডির কোনো স্টুডেন্ট পাওয়া যায়নি!");
-      }
+        if (!curr.children) curr.children = [];
+        curr.children.push(newChild);
+        db.ref("app_data/folderTree").set(updated);
+        setNewFolderName("");
+      };
+
+      const renderAdminTab = () => (
+        <div>
+          <div className="glass-card">
+            <h3 style={{ fontSize: 16, color: 'var(--accent-orange)', marginBottom: 8 }}>⚙️ {t.adminPanel}</h3>
+            <p style={{ fontSize: 11, color: 'var(--text-muted)' }}>Admin ID: {currentUser.id}</p>
+          </div>
+
+          {/* Logo & App Info */}
+          <div className="glass-card">
+            <h4 style={{ fontSize: 14, color: '#fff', marginBottom: 10 }}>🎨 App Logo & Branding</h4>
+            <input
+              type="text"
+              className="input-field"
+              placeholder="Paste Logo Image URL"
+              value={newLogoUrl}
+              onChange={e => setNewLogoUrl(e.target.value)}
+            />
+            <button
+              className="btn-secondary"
+              onClick={() => {
+                if (newLogoUrl.trim()) {
+                  db.ref("app_data/settings/logoUrl").set(newLogoUrl.trim());
+                  alert("Logo Updated!");
+                }
+              }}
+            >
+              Update App Logo
+            </button>
+          </div>
+
+          {/* Folder Creator */}
+          <div className="glass-card">
+            <h4 style={{ fontSize: 14, color: '#fff', marginBottom: 10 }}>📂 Add Nested Sub-Folder</h4>
+            <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 6 }}>
+              Current Directory: {currentFolder.name}
+            </p>
+            <input
+              type="text"
+              className="input-field"
+              placeholder="Folder / Subject / Topic Name"
+              value={newFolderName}
+              onChange={e => setNewFolderName(e.target.value)}
+            />
+            <button className="btn-primary" onClick={handleAddSubFolder}>
+              + {t.addFolder}
+            </button>
+          </div>
+
+          {/* Student Management */}
+          <div className="glass-card">
+            <h4 style={{ fontSize: 14, color: '#fff', marginBottom: 10 }}>👥 Add New Student</h4>
+            <form onSubmit={handleAddStudent}>
+              <input
+                type="text"
+                className="input-field"
+                placeholder="Student Name"
+                value={newStudentName}
+                onChange={e => setNewStudentName(e.target.value)}
+              />
+              <input
+                type="text"
+                className="input-field"
+                placeholder="Mobile / ID (e.g., 6296388399)"
+                value={newStudentPhone}
+                onChange={e => setNewStudentPhone(e.target.value)}
+              />
+              <input
+                type="text"
+                className="input-field"
+                placeholder="Initial Password"
+                value={newStudentPass}
+                onChange={e => setNewStudentPass(e.target.value)}
+              />
+              <button type="submit" className="btn-primary">
+                + Register Student
+              </button>
+            </form>
+
+            <h5 style={{ fontSize: 13, color: '#fff', margin: '14px 0 8px 0' }}>Student List</h5>
+            {Object.keys(studentsList).map(phone => {
+              const s = studentsList[phone];
+              return (
+                <div key={phone} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                  <div>
+                    <div style={{ fontSize: 13, color: '#fff' }}>{s.name} ({phone})</div>
+                    <div style={{ fontSize: 10, color: s.isBlocked ? '#f87171' : '#34d399' }}>
+                      Status: {s.isBlocked ? "BLOCKED" : "ACTIVE"}
+                    </div>
+                  </div>
+                  <button
+                    className="btn-chip"
+                    style={{ background: s.isBlocked ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)', color: s.isBlocked ? '#34d399' : '#f87171' }}
+                    onClick={() => handleToggleBlock(phone, s.isBlocked)}
+                  >
+                    {s.isBlocked ? "Unblock" : "Block"}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+
+      return (
+        <div id="root">
+          {renderHeader()}
+          <main className="content-area">
+            {activeTab === "classes" && renderClassesTab()}
+            {activeTab === "mock" && renderMockTab()}
+            {activeTab === "ai" && renderAiTab()}
+            {activeTab === "admin" && currentUser.role === "admin" && renderAdminTab()}
+          </main>
+
+          {/* Bottom Persistent Navigation */}
+          <nav className="bottom-nav">
+            <button
+              className={`nav-item ${activeTab === 'classes' ? 'active' : ''}`}
+              onClick={() => setActiveTab("classes")}
+            >
+              <span className="nav-icon">📁</span>
+              <span>{t.tabClassNotes}</span>
+            </button>
+            <button
+              className={`nav-item ${activeTab === 'mock' ? 'active' : ''}`}
+              onClick={() => setActiveTab("mock")}
+            >
+              <span className="nav-icon">📝</span>
+              <span>{t.tabMockTest}</span>
+            </button>
+            <button
+              className={`nav-item ${activeTab === 'ai' ? 'active' : ''}`}
+              onClick={() => setActiveTab("ai")}
+            >
+              <span className="nav-icon">🤖</span>
+              <span>{t.tabAiSir}</span>
+            </button>
+            {currentUser.role === "admin" && (
+              <button
+                className={`nav-item ${activeTab === 'admin' ? 'active' : ''}`}
+                onClick={() => setActiveTab("admin")}
+              >
+                <span className="nav-icon">⚙️</span>
+                <span>{t.adminPanel}</span>
+              </button>
+            )}
+          </nav>
+        </div>
+      );
     }
 
-    // ==========================================
-    // 11. NAVIGATION & UTILITIES
-    // ==========================================
-    function switchScreen(screenId) {
-      document.querySelectorAll('.screen-view').forEach(s => s.classList.remove('active'));
-      const target = document.getElementById(screenId);
-      if (target) target.classList.add('active');
-    }
-
-    function switchMainTab(tabName, chipElem, navIdx) {
-      // Toggle nav chips
-      if (chipElem) {
-        document.querySelectorAll('.nav-chip').forEach(c => c.classList.remove('active'));
-        chipElem.classList.add('active');
-      }
-
-      // Toggle bottom tabs if clicked
-      if (navIdx !== undefined) {
-        const bottomBtns = document.querySelectorAll('.tab-btn');
-        bottomBtns.forEach(b => b.classList.remove('active'));
-        if (bottomBtns[navIdx]) bottomBtns[navIdx].classList.add('active');
-      }
-
-      // Show tab content
-      document.querySelectorAll('.tab-content-block').forEach(t => t.style.display = 'none');
-      if (tabName === 'foundation') document.getElementById('tabFoundation').style.display = 'block';
-      if (tabName === 'practice') document.getElementById('tabPractice').style.display = 'block';
-      if (tabName === 'mocktest') document.getElementById('tabMockTest').style.display = 'block';
-      if (tabName === 'aidoubt') document.getElementById('tabAIDoubt').style.display = 'block';
-      if (tabName === 'reels') document.getElementById('tabReels').style.display = 'block';
-    }
-
-    function toggleLanguage() {
-      currentLang = (currentLang === 'bn' ? 'en' : 'bn');
-      document.getElementById('langText').innerText = (currentLang === 'bn' ? 'English' : 'বাংলা');
-      
-      // Update UI translations
-      if (currentLang === 'en') {
-        document.getElementById('headerTagline').innerText = "Best Preparation for Govt. Exams";
-        document.getElementById('heroSubtitle').innerText = "Your Future, Our Mission";
-        document.getElementById('btnStudentLogin').innerText = "STUDENT LOGIN";
-        document.getElementById('bNav1').innerText = "Classes & Notes";
-        document.getElementById('bNav2').innerText = "Mock Test";
-        document.getElementById('bNav3').innerText = "AI Sir";
-        document.getElementById('bNav4').innerText = "Shorts";
-        document.getElementById('bNav5').innerText = "Logout";
-      } else {
-        document.getElementById('headerTagline').innerText = "সরকারি চাকরির সেরা প্রস্তুতি";
-        document.getElementById('heroSubtitle').innerText = "আপনার ভবিষ্যৎ, আমাদের লক্ষ্য";
-        document.getElementById('btnStudentLogin').innerText = "STUDENT LOGIN";
-        document.getElementById('bNav1').innerText = "ক্লাস ও নোটস";
-        document.getElementById('bNav2').innerText = "মক টেস্ট";
-        document.getElementById('bNav3').innerText = "AI স্যার";
-        document.getElementById('bNav4').innerText = "শর্টস";
-        document.getElementById('bNav5').innerText = "লগআউট";
-      }
-      renderSubjectFolders();
-    }
-
-    function syncAppCloud(manual) {
-      if (manual) showToast("ক্লাউড ডেটা সিঙ্ক করা হচ্ছে...");
-      initFirebaseService();
-    }
-
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.innerText = msg;
-      t.style.display = 'block';
-      setTimeout(() => { t.style.display = 'none'; }, 2500);
-    }
-
-    // App Initialization
-    window.addEventListener('DOMContentLoaded', () => {
-      initFirebaseService();
-      renderSubjectFolders();
-    });
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
   </script>
 </body>
 </html>
